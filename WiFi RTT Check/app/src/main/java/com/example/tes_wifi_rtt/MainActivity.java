@@ -27,5 +27,7 @@ public class MainActivity extends Activity {
             result.setText("Yes");
         else
             result.setText("No");
+
+        // This is a test commit
     }
 }
