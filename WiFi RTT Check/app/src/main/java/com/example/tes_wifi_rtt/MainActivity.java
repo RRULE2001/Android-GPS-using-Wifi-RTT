@@ -1,7 +1,5 @@
 package com.example.tes_wifi_rtt;
 
-//import androidx.appcompat.app.AppCompatActivity;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Color;
@@ -20,12 +18,11 @@ import android.widget.ListView;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
-
 import java.util.List;
 
 public class MainActivity extends Activity {
     final static int textSize = 20;
-    final static int textColor = Color.WHITE;
+    final static int textColor = Color.BLACK;
     private boolean mLocationPermissionApproved = false;
     private WifiManager mWifiManager;
 
@@ -54,7 +51,7 @@ public class MainActivity extends Activity {
         textView2.setTextColor(textColor);
         textView2.setTextSize(textSize);
 
-        LinearLayout linearLayout = (LinearLayout) findViewById(R.id.linearLayout);
+        LinearLayout linearLayout = findViewById(R.id.linearLayout);
 
 
         if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WIFI_RTT)) {
@@ -72,7 +69,7 @@ public class MainActivity extends Activity {
 
         WifiRttManager mWifiRttManager = (WifiRttManager) context.getSystemService(Context.WIFI_RTT_RANGING_SERVICE);
 
-        final Button button = findViewById(R.id.buttonRefresh);
+        final ImageButton button = findViewById(R.id.buttonRefresh);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 RangingRequest.Builder builder = new RangingRequest.Builder();
@@ -127,18 +124,13 @@ public class MainActivity extends Activity {
                                         wifiSignalStrength[i] = "FAIL";
                                         wifiDistance[i] = 0;
                                     }
-                                    System.out.println("MAC:" + wifiMac[i]);
-                                    System.out.println("SignalStrength(dBm):" + wifiSignalStrength[i]);
-                                    System.out.println("Distance(mm):" + wifiDistance[i]);
-                                    System.out.println("Result Size:" + results.size());
-
                                 }
                                 for( int i = 0; i < index; i++ )
                                 {
                                     TextView textView = new TextView(context);
                                     textView.setText("MAC: " + wifiMac[i] + "\n"
                                             + "SignalStrength(dBm): " + wifiSignalStrength[i] + "\n"
-                                            + "Distance(mm): " + wifiDistance[i]);
+                                            + "Distance(mm): " + wifiDistance[i] + "\n");
                                     textView.setTextColor(textColor); // Sets color to white
                                     textView.setTextSize(textSize);
                                     linearLayout.addView(textView);
