@@ -20,6 +20,7 @@
  * Sort routers based on RSSI
  *  -If the RSSI is equal then sort by distance
  * Store router X and Y position on object creation
+ *  -Lookup table?
  * Gets and sets for all variables
  */
 
@@ -313,6 +314,30 @@ public class GPSCoreAPI {
             this.device.setX(x);
         if (y > 0)
             this.device.setY(y);
+    }
+
+    public void setRouterPos(int x, int y, int index) {
+        // Get current list of routers
+        Router[] routerList = this.device.getRouterList();
+        // If input index is valid then set X and Y position
+        if (index < routerList.length) {
+            routerList[i].setX(x);
+            routerList[i].setY(y);
+        }
+    }
+    public void setRouterPos(int x, int y, String MACAddr) {
+        // Get current router list
+        Router[] routerList = this.device.getRouterList();
+
+        // Find input MAC ID in list of routers
+        for (int i = 0; i < routerList.length; i++) {
+            // If MAC ID is found then set X and Y position
+            if (routerList[i].getMACAddr().equals(MACAddr)) {
+                routerList[i].setX(x);
+                routerList[i].setY(x);
+                break;
+            }
+        }
     }
 
     /* Methods */
