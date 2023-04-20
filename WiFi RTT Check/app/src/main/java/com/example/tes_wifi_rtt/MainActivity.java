@@ -14,15 +14,11 @@ import android.net.wifi.WifiManager;
 import android.net.wifi.rtt.RangingRequest;
 import android.net.wifi.rtt.*;
 import android.Manifest.permission;
-import android.widget.ListView;
 import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.RecyclerView;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class MainActivity extends Activity {
-    final static int textSize = 20;
-    final static int textColor = Color.BLACK;
     private boolean mLocationPermissionApproved = false;
     private WifiManager mWifiManager;
 
@@ -36,29 +32,16 @@ public class MainActivity extends Activity {
         Context context = getApplicationContext();
 
         TextView textCompatible = findViewById(R.id.textCompatible);
-        textCompatible.setTextColor(textColor);
-        textCompatible.setTextSize(textSize);
-
         TextView textError = findViewById(R.id.textError);
-        textError.setTextColor(textColor);
-        textError.setTextSize(textSize);
-
-        TextView textView1 = findViewById(R.id.textView);
-        textView1.setTextColor(textColor);
-        textView1.setTextSize(textSize);
-
-        TextView textView2 = findViewById(R.id.textView2);
-        textView2.setTextColor(textColor);
-        textView2.setTextSize(textSize);
-
         LinearLayout linearLayout = findViewById(R.id.linearLayout);
-
 
         if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WIFI_RTT)) {
             textCompatible.setText("Supported");
+            textCompatible.setTextColor(Color.GREEN);
         }
         else {
             textCompatible.setText("Not Supported");
+            textCompatible.setTextColor(Color.RED);
         }
 
         mLocationPermissionApproved =
@@ -69,7 +52,7 @@ public class MainActivity extends Activity {
 
         WifiRttManager mWifiRttManager = (WifiRttManager) context.getSystemService(Context.WIFI_RTT_RANGING_SERVICE);
 
-        final ImageButton button = findViewById(R.id.buttonRefresh);
+        final ToggleButton button = findViewById(R.id.buttonRefresh);
         button.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 RangingRequest.Builder builder = new RangingRequest.Builder();
@@ -90,7 +73,7 @@ public class MainActivity extends Activity {
                     scanResults = mWifiManager.getScanResults();
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) { // Checks version is up to date
                         String[] wifiMac = new String[10];
-                        String[] wifiSignalStrength = new String[10];
+                        int[] wifiSignalStrength = new int[10];
                         int[] wifiDistance = new int[10];
 
                         for(int i = 0; i < scanResults.size(); i++){ // Iterates through all scanned Wifi(s)
@@ -107,33 +90,58 @@ public class MainActivity extends Activity {
                             @Override
                             public void onRangingFailure(int code) {
                                 textError.setText("Failure " + code);
+                                textError.setTextColor(Color.RED);
                             }
 
                             @Override
                             public void onRangingResults(List<RangingResult> results) {
                                 textError.setText("Success");
+                                textError.setTextColor(Color.GREEN);
                                 int index = 0;
                                 for(int i = 0; i < results.size(); i++) {
                                     if(results.get(i).getStatus() == RangingResult.STATUS_SUCCESS) { // If STATUS_SUCCESS
                                         wifiMac[index] = String.valueOf(results.get(i).getMacAddress());
-                                        wifiSignalStrength[index] = String.valueOf(results.get(i).getRssi());
+                                        wifiSignalStrength[index] = results.get(i).getRssi();
                                         wifiDistance[index++] = results.get(i).getDistanceMm();
                                     }
                                     else { // If STATUS_FAIL
                                         wifiMac[i] = "FAIL";
-                                        wifiSignalStrength[i] = "FAIL";
+                                        wifiSignalStrength[i] = 0;
                                         wifiDistance[i] = 0;
                                     }
                                 }
                                 for( int i = 0; i < index; i++ )
                                 {
                                     TextView textView = new TextView(context);
+                                    ImageButton placeMapButton = new ImageButton(context);
+                                    placeMapButton.setBackgroundColor(0xFF2452A2); // Sets color to kettering blue
+                                    placeMapButton.setBackgroundResource(R.drawable.place_router_button);
+                                    placeMapButton.setImageResource(android.R.drawable.ic_dialog_map);
+
+                                    LinearLayout horizontalLayout = new LinearLayout(context);
+                                    horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+
                                     textView.setText("MAC: " + wifiMac[i] + "\n"
-                                            + "SignalStrength(dBm): " + wifiSignalStrength[i] + "\n"
-                                            + "Distance(mm): " + wifiDistance[i] + "\n");
-                                    textView.setTextColor(textColor); // Sets color to white
-                                    textView.setTextSize(textSize);
-                                    linearLayout.addView(textView);
+                                            + "RSSI(dBm): " + wifiSignalStrength[i] + "\n"
+                                            + "Distance(mm): " + wifiDistance[i] + "\n"
+                                            + "Longitude(X): " + 0 + "\n"
+                                            + "Latitude(Y): " + 0 + "\n");
+                                    textView.setTextSize(20);
+                                    textView.setTextColor(Color.BLACK);
+
+                                    linearLayout.addView(horizontalLayout);
+                                    horizontalLayout.addView(textView, 0);
+                                    LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(150, 150);
+                                    layoutParams.setMargins(125,0,0,0);
+                                    horizontalLayout.addView(placeMapButton, 1, layoutParams);
+
+                                    placeMapButton.setOnClickListener(new View.OnClickListener() {
+                                        public void onClick(View v) {
+                                            textView.setTextColor(Color.GREEN);
+                                        }
+                                    });
+
+
                                 }
                             }
                         });

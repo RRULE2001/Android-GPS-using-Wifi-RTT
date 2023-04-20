@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Tes_WiFi_RTT</string>
-    <string name="map">map_button</string>
-    <string name="refresh">refresh_button</string>
-    <string name="error">error</string>
-
+    <string name="map_button">Map</string>
+    <string name="refresh_button">Refresh</string>
+    <string name="error_text">Error</string>
+    <string name="rtt_support_text">Rtt Support:</string>
+    <string name="polling_status_text">Polling Status:</string>
 </resources>
