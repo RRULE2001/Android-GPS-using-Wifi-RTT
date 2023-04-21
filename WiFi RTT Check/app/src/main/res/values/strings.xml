@@ -5,4 +5,14 @@
     <string name="error_text">Error</string>
     <string name="rtt_support_text">Rtt Support:</string>
     <string name="polling_status_text">Polling Status:</string>
+    <string name="permission_error">Permission Error</string>
+    <string name="supported">Supported</string>
+    <string name="not_supported">Not Supported</string>
+    <string name="success">Success</string>
+    <string name="failure">Failure</string>
+    <string name="mac">MAC: </string>
+    <string name="rssi">RSSI(dBm): </string>
+    <string name="distance">Distance(mm): </string>
+    <string name="longitude">Longitude(X): </string>
+    <string name="latitude">Latitude(Y): </string>
 </resources>
