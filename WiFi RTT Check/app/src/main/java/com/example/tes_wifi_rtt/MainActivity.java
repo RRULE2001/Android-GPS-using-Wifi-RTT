@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.widget.*;
 import android.view.*;
 import android.content.Context;
@@ -19,6 +20,7 @@ import androidx.core.app.ActivityCompat;
 import java.util.List;
 
 public class MainActivity extends Activity {
+
     List<ScanResult> scanResults;
     public void setCompatible(Context context){
         TextView textCompatible = findViewById(R.id.textCompatible);
@@ -140,11 +142,45 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
         Context context = getApplicationContext();
 
+        ViewFlipper viewFlipper = findViewById(R.id.myViewFlipper);
+
         ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.ACCESS_FINE_LOCATION}, 1);
 
         setCompatible(context);
 
-        ToggleButton button = findViewById(R.id.buttonRefresh);
-        button.setOnClickListener(v -> scanWifi(context));
+        ImageButton button = findViewById(R.id.buttonMap);
+        button.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                viewFlipper.showNext();
+            }
+        });
+    }
+
+    Runnable r2=new Runnable() {
+        @Override
+        public void run() {
+            //Your Toast
+            Switch switch1 = findViewById(R.id.switch1);
+            if (switch1.isChecked()) {
+                Context context = getApplicationContext();
+                scanWifi(context);
+            }
+            h2.postDelayed(r2,getResources().getInteger(R.integer.scan_delay));
+        }
+    };
+    Handler h2=new Handler();
+    @Override
+    public void onResume() {
+        super.onResume();
+        h2.postDelayed(r2,getResources().getInteger(R.integer.scan_delay));
+    }
+    @Override
+    public void onPause() {
+        super.onPause();
+        h2.removeCallbacks(r2);
+
     }
 }
