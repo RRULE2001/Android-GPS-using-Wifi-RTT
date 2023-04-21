@@ -17,5 +17,6 @@
     <string name="latitude">Latitude(Y): </string>
     <string name="switch_text">Refresh: </string>
     <integer name="scan_delay">500</integer>
+    <integer name="text_delay">5000</integer>
 
 </resources>

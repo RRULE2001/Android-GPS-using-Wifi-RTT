@@ -3,6 +3,7 @@
     <size android:height="50dp" android:width="50dp"/>
     <solid android:color="@color/kettering_blue" />
     <corners android:radius="100dp" />
+
 </shape>
 
 

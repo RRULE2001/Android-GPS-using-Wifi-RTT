@@ -16,6 +16,8 @@ import android.net.wifi.rtt.RangingRequest;
 import android.net.wifi.rtt.*;
 import android.Manifest;
 import android.Manifest.permission;
+
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.core.app.ActivityCompat;
 import java.util.List;
 
