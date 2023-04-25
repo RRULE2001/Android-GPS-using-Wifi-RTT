@@ -17,11 +17,8 @@
 /** TODO:
  * Error check necessary variables.
  * Exceptions?
- * Sort routers based on RSSI
- *  -If the RSSI is equal then sort by distance
  * Store router X and Y position on object creation
  *  -Lookup table?
- * Gets and sets for all variables
  */
 
 package com.example.tes_wifi_rtt;
@@ -42,7 +39,7 @@ import java.lang.String;
 public class GPSCoreAPI {
     /* Public Variables */
     /* Private Variables */
-    private Device device;      /*!< Object containg information for a single device to record on the GPS. */
+    private Device device;      /*!< Object containing information for a single device to record on the GPS. */
 
     /* Sub-Classes */
     /** \class Router
@@ -145,14 +142,14 @@ public class GPSCoreAPI {
      *
      *  Any relevant information that is needed by the GPS algorithms and interfaces
      *  is stored inside this class. It is designed for scalability to make adding
-     *  additional devices to the GPS easier while abstracting out unecessary information.
+     *  additional devices to the GPS easier while abstracting out unnecessary information.
      */
     private class Device {
         /* Public Variables */
         /* Private Variables */
         private int x;
         private int y;
-        private Router routerList[];
+        private Router[] routerList;
 
         /* Constructor(s) */
 
@@ -225,8 +222,7 @@ public class GPSCoreAPI {
     /* Gets */
 
     public int[] getDevicePos() {
-        int[] devicePos = {this.device.getX(), this.device.getY()};
-        return devicePos;
+        return new int[] {this.device.getX(), this.device.getY()};
     }
 
     public int[] getRouterPos(int index) {
@@ -236,10 +232,8 @@ public class GPSCoreAPI {
         if (routerList != null) {
             // Check if input value is a valid array index
             if (index < routerList.length) {
-                // Get indexed router's positional data
-                int[] routerPos = {routerList[index].getX(), routerList[index].getY(), routerList[index].getDist()};
                 // Return array containing positional data
-                return routerPos;
+                return new int[] {routerList[index].getX(), routerList[index].getY(), routerList[index].getDist()};
             }
         }
 
@@ -255,15 +249,15 @@ public class GPSCoreAPI {
             // Create empty array to hold positional data
             int[] routerPos = null;
             // Iterate through the list of routers
-            for (int i = 0; i < routerList.length; i++) {
+            for (Router router : routerList) {
                 // Compare current router's MAC address to the input MAC address
-                if (routerList[i].getMACAddr().equals(MACAddr)) {
+                if (router.getMACAddr().equals(MACAddr)) {
                     // MAC address was found so create empty array
                     routerPos = new int[3];
                     // Store positional data from router into the array
-                    routerPos[0] = routerList[i].getX();
-                    routerPos[1] = routerList[i].getY();
-                    routerPos[2] = routerList[i].getDist();
+                    routerPos[0] = router.getX();
+                    routerPos[1] = router.getY();
+                    routerPos[2] = router.getDist();
                     // Exit loop
                     break;
                 }
@@ -366,10 +360,10 @@ public class GPSCoreAPI {
             // Create empty array to hold positional data
             int routerRssi = 0;
             // Iterate through the list of routers
-            for (int i = 0; i < routerList.length; i++) {
+            for (Router router : routerList) {
                 // Compare current router's MAC address to the input MAC address
-                if (routerList[i].getMACAddr().equals(MACAddr)) {
-                    routerRssi = routerList[i].getRSSI();
+                if (router.getMACAddr().equals(MACAddr)) {
+                    routerRssi = router.getRSSI();
                     // Exit loop
                     break;
                 }
@@ -412,11 +406,11 @@ public class GPSCoreAPI {
         Router[] routerList = this.device.getRouterList();
 
         // Find input MAC ID in list of routers
-        for (int i = 0; i < routerList.length; i++) {
+        for (Router router : routerList) {
             // If MAC ID is found then set X and Y position
-            if (routerList[i].getMACAddr().equals(MACAddr)) {
-                routerList[i].setX(x);
-                routerList[i].setY(x);
+            if (router.getMACAddr().equals(MACAddr)) {
+                router.setX(x);
+                router.setY(x);
                 break;
             }
         }
@@ -426,7 +420,7 @@ public class GPSCoreAPI {
 
     /** \fn void appendRouterList(int dist, String MACAddr, int rssi)
      *  \brief This function converts the input data into a router object
-     *  and inserts it into the list of routers. When instered, the routers
+     *  and inserts it into the list of routers. When inserted, the routers
      *  are sorted based on RSSI and then distance.
      *
      *  \param[in] dist An integer containing the distance in mm from the device
@@ -435,12 +429,11 @@ public class GPSCoreAPI {
      *  \return None
      */
     public void appendRouterList(int dist, String MACAddr, int rssi) {
-        boolean isAdded = false;
         boolean isNew = true;
         // Get current router list
         Router[] routerList = this.device.getRouterList();
         // Create empty router list
-        Router[] newRouterList = null;
+        Router[] newRouterList;
         // Check if current router list is empty
         if (routerList != null) {
             // Iterate through router list to see if input MAC address already exists
@@ -462,9 +455,8 @@ public class GPSCoreAPI {
                 newRouterList = new Router[routerList.length];
 
             // Copies over past data
-            for (int i = 0; i < routerList.length; i++){
-                newRouterList[i] = routerList[i];
-            }
+            System.arraycopy(routerList, 0, newRouterList, 0, routerList.length);
+
             newRouterList[newRouterList.length - 1] = new Router(0, 0, dist, MACAddr, rssi); // Adds to end of array
 
             for (int i = 0; i < newRouterList.length; i++) {
@@ -500,6 +492,13 @@ public class GPSCoreAPI {
      *  returns false.
      */
     public boolean equals(Object o) {
-        return (this == o);
+        if (this == o)
+            return true;
+        else if (o instanceof GPSCoreAPI) {
+            GPSCoreAPI temp = (GPSCoreAPI)o;
+            return (this.device == temp.device);
+        }
+
+        return false;
     }
 }
