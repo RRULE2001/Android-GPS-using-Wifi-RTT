@@ -48,7 +48,8 @@ public class MainActivity extends Activity {
 
         RangingRequest.Builder builder = new RangingRequest.Builder();
 
-        linearLayout.removeAllViews();
+        RangingRequest req = builder.build(); // Builds request for distances
+
         // Code here executes on main thread after user presses button
         if (mLocationPermissionApproved) {
             if (ActivityCompat.checkSelfPermission(context, permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -66,75 +67,84 @@ public class MainActivity extends Activity {
                 String[] wifiMac = new String[10];
                 int[] wifiSignalStrength = new int[10];
                 int[] wifiDistance = new int[10];
-                for(int i = 0; i < scanResults.size(); i++){ // Iterates through all scanned Wifi(s)
-                    if((scanResults.get(i)).is80211mcResponder()) { // Checks that the router is RTT supported
+                boolean rttRoutersAvailable = false;
+
+                for (int i = 0; i < scanResults.size(); i++) { // Iterates through all scanned Wifi(s)
+                    if ((scanResults.get(i)).is80211mcResponder()) { // Checks that the router is RTT supported
                         builder.addAccessPoint(scanResults.get(i)); // Adds access point to request range
+                        rttRoutersAvailable = true;
                     }
                 }
-                RangingRequest req = builder.build(); // Builds request for distances
+                scanResults.clear();
+                if (rttRoutersAvailable) {
+                    rttRoutersAvailable = false;
+                    mWifiRttManager.startRanging(req, context.getMainExecutor(), new RangingResultCallback() {
+                        @Override
+                        public void onRangingFailure(int code) {
+                            textError.setText(R.string.failure + code);
+                            textError.setTextColor(Color.RED);
+                        }
 
-                mWifiRttManager.startRanging(req, context.getMainExecutor(), new RangingResultCallback() {
-
-                    @Override
-                    public void onRangingFailure(int code) {
-                        textError.setText(R.string.failure + code);
-                        textError.setTextColor(Color.RED);
-                    }
-
-                    @SuppressLint("SetTextI18n")
-                    @Override
-                    public void onRangingResults(List<RangingResult> results) {
-                        textError.setText(R.string.success);
-                        textError.setTextColor(Color.GREEN);
-                        int index = 0;
-                        for(int i = 0; i < results.size(); i++) {
-                            if(results.get(i).getStatus() == RangingResult.STATUS_SUCCESS) { // If STATUS_SUCCESS
-                                wifiMac[index] = String.valueOf(results.get(i).getMacAddress());
-                                wifiSignalStrength[index] = results.get(i).getRssi();
-                                wifiDistance[index++] = results.get(i).getDistanceMm();
+                        @SuppressLint("SetTextI18n")
+                        @Override
+                        public void onRangingResults(List<RangingResult> results) {
+                            textError.setText(R.string.success);
+                            textError.setTextColor(Color.GREEN);
+                            int index = 0;
+                            for (int i = 0; i < results.size(); i++) {
+                                if (results.get(i).getStatus() == RangingResult.STATUS_SUCCESS) { // If STATUS_SUCCESS
+                                    wifiMac[index] = String.valueOf(results.get(i).getMacAddress());
+                                    wifiSignalStrength[index] = results.get(i).getRssi();
+                                    wifiDistance[index++] = results.get(i).getDistanceMm();
+                                } else { // If STATUS_FAIL
+                                    wifiMac[i] = "FAIL";
+                                    wifiSignalStrength[i] = 0;
+                                    wifiDistance[i] = 0;
+                                }
                             }
-                            else { // If STATUS_FAIL
-                                wifiMac[i] = "FAIL";
-                                wifiSignalStrength[i] = 0;
-                                wifiDistance[i] = 0;
+                            if(index > 0) {
+                                linearLayout.removeAllViews();
+                            }
+                            for (int i = 0; i < index; i++) {
+                                TextView textView = new TextView(context);
+                                ImageButton placeMapButton = new ImageButton(context);
+                                placeMapButton.setBackgroundColor(0xFF2452A2); // Sets color to kettering blue
+                                placeMapButton.setBackgroundResource(R.drawable.place_router_button);
+                                placeMapButton.setImageResource(android.R.drawable.ic_dialog_map);
+
+                                LinearLayout horizontalLayout = new LinearLayout(context);
+                                horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+                                textView.setText(getString(R.string.mac) + wifiMac[i] + "\n"
+                                        + getString(R.string.rssi) + wifiSignalStrength[i] + "\n"
+                                        + getString(R.string.distance) + wifiDistance[i] + "\n"
+                                        + getString(R.string.longitude) + 0 + "\n"
+                                        + getString(R.string.latitude) + 0 + "\n");
+
+                                textView.setTextSize(20);
+                                textView.setTextColor(Color.BLACK);
+
+                                linearLayout.addView(horizontalLayout);
+                                horizontalLayout.addView(textView, 0);
+                                LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(150, 150);
+                                layoutParams.setMargins(125, 0, 0, 0);
+                                horizontalLayout.addView(placeMapButton, 1, layoutParams);
+
+                                placeMapButton.setOnClickListener(v -> textView.setTextColor(Color.GREEN));
+
                             }
                         }
-                        for( int i = 0; i < index; i++ )
-                        {
-                            TextView textView = new TextView(context);
-                            ImageButton placeMapButton = new ImageButton(context);
-                            placeMapButton.setBackgroundColor(0xFF2452A2); // Sets color to kettering blue
-                            placeMapButton.setBackgroundResource(R.drawable.place_router_button);
-                            placeMapButton.setImageResource(android.R.drawable.ic_dialog_map);
-
-                            LinearLayout horizontalLayout = new LinearLayout(context);
-                            horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-                            textView.setText(getString(R.string.mac) + wifiMac[i] + "\n"
-                                    + getString(R.string.rssi) + wifiSignalStrength[i] + "\n"
-                                    + getString(R.string.distance) + wifiDistance[i] + "\n"
-                                    + getString(R.string.longitude) + 0 + "\n"
-                                    + getString(R.string.latitude) + 0 + "\n");
-
-                            textView.setTextSize(20);
-                            textView.setTextColor(Color.BLACK);
-
-                            linearLayout.addView(horizontalLayout);
-                            horizontalLayout.addView(textView, 0);
-                            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(150, 150);
-                            layoutParams.setMargins(125,0,0,0);
-                            horizontalLayout.addView(placeMapButton, 1, layoutParams);
-
-                            placeMapButton.setOnClickListener(v -> textView.setTextColor(Color.GREEN));
-
-
-                        }
-                    }
-                });
+                    });
+                }
+                else {
+                    textError.setText(R.string.no_rtt_error);
+                    textError.setTextColor(Color.RED);
+                }
             }
         }
         else {
             textError.setText(R.string.permission_error);
+            textError.setTextColor(Color.RED);
         }
     }
     @SuppressLint("SetTextI18n")

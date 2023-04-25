@@ -6,6 +6,7 @@
     <string name="rtt_support_text">Rtt Support:</string>
     <string name="polling_status_text">Polling Status:</string>
     <string name="permission_error">Permission Error</string>
+    <string name="no_rtt_error">No RTT Routers</string>
     <string name="supported">Supported</string>
     <string name="not_supported">Not Supported</string>
     <string name="success">Success</string>
