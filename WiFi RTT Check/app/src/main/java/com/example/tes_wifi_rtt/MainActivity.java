@@ -110,10 +110,7 @@ public class MainActivity extends Activity {
                             }
 
                             for (int i = 0; i < index; i++) {
-
                                 coreAPI.appendRouterList(wifiDistance[i], wifiMac[i], wifiSignalStrength[i]); // Adds router to list of routers
-
-
 
                                 TextView textView = new TextView(context);
                                 textView.setTextSize(20);

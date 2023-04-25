@@ -475,7 +475,7 @@ public class GPSCoreAPI {
                         newRouterList[i + 1] = temp;
                     }
                     else if(newRouterList[i].getRSSI() == newRouterList[i + 1].getRSSI()){
-                        if (newRouterList[i].getDist() < newRouterList[i + 1].getDist()) {
+                        if (newRouterList[i].getDist() > newRouterList[i + 1].getDist()) {
                             Router temp = newRouterList[i];
                             newRouterList[i] = newRouterList[i + 1];
                             newRouterList[i + 1] = temp;
