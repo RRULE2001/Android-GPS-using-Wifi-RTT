@@ -213,9 +213,7 @@ public class GPSCoreAPI {
 
     /* Constructor(s) */
 
-    public GPSCoreAPI() {
-        this.device = null;
-    }
+    public GPSCoreAPI() { this.device = new Device(); }
 
     public GPSCoreAPI(int dist, String MACAddr, int rssi) {
         // Create a new array of routers with one element
@@ -300,6 +298,90 @@ public class GPSCoreAPI {
         return null; // Exceptions?
     }
 
+    public int getRouterX(int i) {
+        Router[] routerList = this.device.getRouterList();
+        if (routerList != null) {
+            if (i < routerList.length) {
+                return routerList[i].getX();
+            }
+        }
+
+        return 0;
+    }
+
+    public int getRouterY(int i) {
+        Router[] routerList = this.device.getRouterList();
+        if (routerList != null) {
+            if (i < routerList.length) {
+                return routerList[i].getY();
+            }
+        }
+
+        return 0;
+    }
+
+    public int getRouterDist(int i) {
+        Router[] routerList = this.device.getRouterList();
+        if (routerList != null) {
+            if (i < routerList.length) {
+                return routerList[i].getDist();
+            }
+        }
+
+        return 0;
+    }
+
+    public int getRouterRssi(int i) {
+        // Get current router list
+        Router[] routerList = this.device.getRouterList();
+        // Check if router list is empty
+        if (routerList != null)
+        {
+            // Check if input value is a valid array index
+            if (i < routerList.length) {
+                return routerList[i].getRSSI();
+            }
+        }
+
+        return 0;
+    }
+
+    public String getRouterMACAddr(int i) {
+        Router[] routerList = this.device.getRouterList();
+        if (routerList != null) {
+            if (i < routerList.length) {
+                return routerList[i].getMACAddr();
+            }
+        }
+
+        return null;
+    }
+
+    public int getRouterRssi(String MACAddr) {
+        // Get current router list
+        Router[] routerList = this.device.getRouterList();
+        // Check if router list is empty
+        if (routerList != null)
+        {
+            // Create empty array to hold positional data
+            int routerRssi = 0;
+            // Iterate through the list of routers
+            for (int i = 0; i < routerList.length; i++) {
+                // Compare current router's MAC address to the input MAC address
+                if (routerList[i].getMACAddr().equals(MACAddr)) {
+                    routerRssi = routerList[i].getRSSI();
+                    // Exit loop
+                    break;
+                }
+            }
+
+            return routerRssi;
+        }
+
+        // Router list was empty so return null
+        return 0;
+    }
+
     /* Sets */
 
     public void setDevicePos(int[] devicePos) {
@@ -321,8 +403,8 @@ public class GPSCoreAPI {
         Router[] routerList = this.device.getRouterList();
         // If input index is valid then set X and Y position
         if (index < routerList.length) {
-            routerList[i].setX(x);
-            routerList[i].setY(y);
+            routerList[index].setX(x);
+            routerList[index].setY(y);
         }
     }
     public void setRouterPos(int x, int y, String MACAddr) {
@@ -354,78 +436,59 @@ public class GPSCoreAPI {
      */
     public void appendRouterList(int dist, String MACAddr, int rssi) {
         boolean isAdded = false;
+        boolean isNew = true;
         // Get current router list
         Router[] routerList = this.device.getRouterList();
         // Create empty router list
         Router[] newRouterList = null;
         // Check if current router list is empty
         if (routerList != null) {
-            int i = 0;
             // Iterate through router list to see if input MAC address already exists
-            for (i = 0; i < routerList.length; i++) {
+            for (int i = 0; i < routerList.length; i++) {
                 // If MAC address is found then delete current object
-                if (routerList[i].getMACAddr().equals(MACAddr))
-                    routerList[i] = null;
-            }
-            // Create new router list with original size + 1
-            newRouterList = new Router[routerList.length + 1];
-            int tempRssi = 0;
-            // Copy contents of old list to new list
-            for (i = 0, int j = 0; i < newRouterList.length; i++, j++) {
-                // Increment to next router if current index is empty
-                if (routerList[j] == null)
-                    j++;
-
-                // Check if the input router has already been added
-                if (!isAdded) {
-                    // Get the current router's RSSI
-                    tempRssi = routerList[j].getRSSI();
-                    // Check if the current router's rssi is weaker than the input
-                    if (tempRssi < rssi) {
-                        // Insert new Router object at current index
-                        newRouterList[i++] = new Router(0, 0, dist, MACAddr, rssi);
-                        // Insert current router into the new list
-                        newRouterList[i] = routerList[j];
-
-                        isAdded = true;
+                if (routerList[i].getMACAddr().equals(MACAddr)) {
+                    for(int k = i; k < routerList.length - 1; k++){
+                        routerList[k] = routerList[k + 1];
                     }
-                    // Check if the current router's rssi is the same as the input
-                    else if (tempRssi == rssi) {
-                        int tempDist = 0;
-                        // Get current routers distance from device
-                        tempDist = routerList[j].getDist();
-                        // Check if the current router is farther away then the input
-                        if (tempDist > dist) {
-                            // Insert new Router object at current index
-                            newRouterList[i++] = new Router(0, 0, dist, MACAddr, rssi);
-                            // Insert current router into the new list
-                            newRouterList[i] = routerList[j];
-                        } else {
-                            // Current router is closer than the input
-                            // Insert current router into the new list
-                            newRouterList[i++] = routerList[j];
-                            // Insert new Router object at current index
-                            newRouterList[i] = new Router(0, 0, dist, MACAddr, rssi);
-                        }
-
-                        isAdded = true;
-                    } else {
-                        // Current router's rssi is stronger than the input
-                        newRouterList[i++] = routerList[j];
-                    }
-                } else {
-                    // Input router has already been added so insert remaining routers from old list
-                    newRouterList[i] = routerList[j];
+                    routerList[routerList.length - 1] = null;
+                    isNew = false;
+                    break;
                 }
             }
+            // Create new router list with original size + 1
+            if(isNew)
+                newRouterList = new Router[routerList.length + 1];
+            else
+                newRouterList = new Router[routerList.length];
 
-            // Store new router list
-            this.device.setRouterList(newRouterList);
+            // Copies over past data
+            for (int i = 0; i < routerList.length; i++){
+                newRouterList[i] = routerList[i];
+            }
+            newRouterList[newRouterList.length - 1] = new Router(0, 0, dist, MACAddr, rssi); // Adds to end of array
+
+            for (int i = 0; i < newRouterList.length; i++) {
+                for (int j = i; j < newRouterList.length - 1; j++) {
+                    if (newRouterList[i].getRSSI() < newRouterList[i + 1].getRSSI()) {
+                        Router temp = newRouterList[i];
+                        newRouterList[i] = newRouterList[i + 1];
+                        newRouterList[i + 1] = temp;
+                    }
+                    else if(newRouterList[i].getRSSI() == newRouterList[i + 1].getRSSI()){
+                        if (newRouterList[i].getDist() < newRouterList[i + 1].getDist()) {
+                            Router temp = newRouterList[i];
+                            newRouterList[i] = newRouterList[i + 1];
+                            newRouterList[i + 1] = temp;
+                        }
+                    }
+                }
+            }
         } else {
             // Router list is empty so create a new list
             newRouterList = new Router[1];
             newRouterList[0] = new Router(0, 0, dist, MACAddr, rssi);
         }
+        this.device.setRouterList(newRouterList);
     }
 
     /** \fn boolean equals(Object o)

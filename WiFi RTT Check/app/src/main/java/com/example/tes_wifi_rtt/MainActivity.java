@@ -24,6 +24,9 @@ import java.util.List;
 public class MainActivity extends Activity {
 
     List<ScanResult> scanResults;
+
+    GPSCoreAPI coreAPI = new GPSCoreAPI();
+
     public void setCompatible(Context context){
         TextView textCompatible = findViewById(R.id.textCompatible);
 
@@ -105,31 +108,42 @@ public class MainActivity extends Activity {
                             if(index > 0) {
                                 linearLayout.removeAllViews();
                             }
+
                             for (int i = 0; i < index; i++) {
+
+                                coreAPI.appendRouterList(wifiDistance[i], wifiMac[i], wifiSignalStrength[i]); // Adds router to list of routers
+
+
+
                                 TextView textView = new TextView(context);
-                                ImageButton placeMapButton = new ImageButton(context);
-                                placeMapButton.setBackgroundColor(0xFF2452A2); // Sets color to kettering blue
-                                placeMapButton.setBackgroundResource(R.drawable.place_router_button);
-                                placeMapButton.setImageResource(android.R.drawable.ic_dialog_map);
+                                textView.setTextSize(20);
+                                textView.setTextColor(Color.BLACK);
+                                /*textView.setText(getString(R.string.mac)    + wifiMac[i] + "\n"
+                                        + getString(R.string.rssi)          + wifiSignalStrength[i] + "\n"
+                                        + getString(R.string.distance)      + wifiDistance[i] + "\n"
+                                        + getString(R.string.longitude)     + 0 + "\n"
+                                        + getString(R.string.latitude)      + 0 + "\n");*/
+
+                                textView.setText(getString(R.string.mac)    + coreAPI.getRouterMACAddr(i) + "\n"
+                                        + getString(R.string.rssi)          + coreAPI.getRouterRssi(i) + "\n"
+                                        + getString(R.string.distance)      + coreAPI.getRouterDist(i) + "\n"
+                                        + getString(R.string.longitude)     + coreAPI.getRouterX(i) + "\n"
+                                        + getString(R.string.latitude)      + coreAPI.getRouterY(i) + "\n");
 
                                 LinearLayout horizontalLayout = new LinearLayout(context);
                                 horizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
-
-                                textView.setText(getString(R.string.mac) + wifiMac[i] + "\n"
-                                        + getString(R.string.rssi) + wifiSignalStrength[i] + "\n"
-                                        + getString(R.string.distance) + wifiDistance[i] + "\n"
-                                        + getString(R.string.longitude) + 0 + "\n"
-                                        + getString(R.string.latitude) + 0 + "\n");
-
-                                textView.setTextSize(20);
-                                textView.setTextColor(Color.BLACK);
-
                                 linearLayout.addView(horizontalLayout);
                                 horizontalLayout.addView(textView, 0);
                                 LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(150, 150);
                                 layoutParams.setMargins(125, 0, 0, 0);
-                                horizontalLayout.addView(placeMapButton, 1, layoutParams);
 
+
+                                // Handling of button
+                                ImageButton placeMapButton = new ImageButton(context);
+                                placeMapButton.setBackgroundColor(0xFF2452A2); // Sets color to kettering blue
+                                placeMapButton.setBackgroundResource(R.drawable.place_router_button);
+                                placeMapButton.setImageResource(android.R.drawable.ic_dialog_map);
+                                horizontalLayout.addView(placeMapButton, 1, layoutParams);
                                 placeMapButton.setOnClickListener(v -> textView.setTextColor(Color.GREEN));
 
                             }
