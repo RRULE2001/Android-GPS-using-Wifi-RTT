@@ -313,9 +313,9 @@ public class GPSCoreAPI {
     public GPSCoreAPI() {
         this.device = new Device();
         this.lookupTable = new HashMap<>();
-        lookupTable.put("70:3a:cb:6e:ce:85", new int[] {0, 0});
-        lookupTable.put("70:3a:cb:29:4b:3a", new int[] {1, 1});
-        lookupTable.put("d8:6c:63:d6:5f:aa", new int[] {2, 2});
+        lookupTable.put("70:3a:cb:6e:ce:85", new int[] {1, 1});
+        lookupTable.put("70:3a:cb:29:4b:3a", new int[] {2, 2});
+        lookupTable.put("d8:6c:63:d6:5f:aa", new int[] {3, 3});
     }
 
     public GPSCoreAPI(int dist, String MACAddr, int rssi) {
@@ -324,9 +324,9 @@ public class GPSCoreAPI {
         // Create new Device object with input router data
         this.device = new Device(0, 0, router);
         this.lookupTable = new HashMap<>();
-        lookupTable.put("70:3a:cb:6e:ce:85", new int[] {0, 0});
-        lookupTable.put("70:3a:cb:29:4b:3a", new int[] {1, 1});
-        lookupTable.put("d8:6c:63:d6:5f:aa", new int[] {2, 2});
+        lookupTable.put("70:3a:cb:6e:ce:85", new int[] {1, 1});
+        lookupTable.put("70:3a:cb:29:4b:3a", new int[] {2, 2});
+        lookupTable.put("d8:6c:63:d6:5f:aa", new int[] {3, 3});
     }
 
     /* Gets */
