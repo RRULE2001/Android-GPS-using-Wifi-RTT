@@ -180,6 +180,28 @@ public class MainActivity extends Activity {
                 viewFlipper.showNext();
             }
         });
+
+        Button buttonZoomIn = findViewById(R.id.buttonZoomIn);
+
+        buttonZoomIn.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+               // Do stuff here
+            }
+        });
+
+        Button buttonZoomOut = findViewById(R.id.buttonZoomOut);
+
+        buttonZoomOut.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                // Do stuff here
+            }
+        });
     }
 
     Runnable r2=new Runnable() {
