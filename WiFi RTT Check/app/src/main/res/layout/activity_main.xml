@@ -23,6 +23,7 @@
             android:layout_marginBottom="100dp"
             android:background="@color/white" >
 
+<<<<<<< HEAD
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -53,6 +54,15 @@
                     android:textScaleX="1.5"
                     android:textSize="40sp" /> </LinearLayout>
 
+=======
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="410dp"
+                android:layout_height="632dp"
+                android:src="@drawable/map"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+>>>>>>> MapUI
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
