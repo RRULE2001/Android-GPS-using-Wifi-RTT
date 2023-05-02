@@ -56,9 +56,9 @@ public class GPSCoreAPI {
     private class Router {
         /* Public Variables */
         /* Private Variables */
-        private int x;          /*!< X coordinate of router on cartesian grid. */
-        private int y;          /*!< Y coordinate of router on cartesian grid.  */
-        private int dist;       /*!< Distance from the router in millimeters(mm). */
+        private float x;          /*!< X coordinate of router on cartesian grid. */
+        private float y;          /*!< Y coordinate of router on cartesian grid.  */
+        private float dist;       /*!< Distance from the router in millimeters(mm). */
         private String MACAddr; /*!< Human readable string of the MAC address of the router. */
         private int rssi;       /*!< Signal strength of the router; typical range: -55 to -90. */
 
@@ -72,7 +72,7 @@ public class GPSCoreAPI {
             this.rssi = 0;
         }
 
-        public Router(int x, int y, int dist, String MACAddr, int rssi) {
+        public Router(float x, float y, float dist, String MACAddr, int rssi) {
             this.x = x;
             this.y = y;
             this.dist = dist;
@@ -82,15 +82,15 @@ public class GPSCoreAPI {
 
         /* Gets */
 
-        public int getX() {
+        public float getX() {
             return this.x;
         }
 
-        public int getY() {
+        public float getY() {
             return this.y;
         }
 
-        public int getDist() {
+        public float getDist() {
             return this.dist;
         }
 
@@ -104,15 +104,15 @@ public class GPSCoreAPI {
 
         /* Sets */
 
-        public void setX(int x) {
+        public void setX(float x) {
             this.x = x;
         }
 
-        public void setY(int y) {
+        public void setY(float y) {
             this.y = y;
         }
 
-        public void setDist(int dist) {
+        public void setDist(float dist) {
             this.dist = dist;
         }
 
@@ -150,8 +150,8 @@ public class GPSCoreAPI {
     private class Device {
         /* Public Variables */
         /* Private Variables */
-        private int x;
-        private int y;
+        private float x;
+        private float y;
         private Router routerList[];
 
         /* Constructor(s) */
@@ -162,7 +162,7 @@ public class GPSCoreAPI {
             this.routerList = null;
         }
 
-        public Device(int x, int y, Router[] routerList) {
+        public Device(float x, float y, Router[] routerList) {
             this.x = x;
             this.y =y;
             this.routerList = routerList;
@@ -170,11 +170,11 @@ public class GPSCoreAPI {
 
         /* Gets */
 
-        public int getX() {
+        public float getX() {
             return this.x;
         }
 
-        public int getY() {
+        public float getY() {
             return this.y;
         }
 
@@ -184,11 +184,11 @@ public class GPSCoreAPI {
 
         /* Sets */
 
-        public void setX(int x) {
+        public void setX(float x) {
             this.x = x;
         }
 
-        public void setY(int y) {
+        public void setY(float y) {
             this.y = y;
         }
 
@@ -215,7 +215,7 @@ public class GPSCoreAPI {
 
     public GPSCoreAPI() { this.device = new Device(); }
 
-    public GPSCoreAPI(int dist, String MACAddr, int rssi) {
+    public GPSCoreAPI(float dist, String MACAddr, int rssi) {
         // Create a new array of routers with one element
         Router[] router = {new Router(0, 0, dist, MACAddr, rssi)};
         // Create new Device object with input router data
@@ -224,12 +224,12 @@ public class GPSCoreAPI {
 
     /* Gets */
 
-    public int[] getDevicePos() {
-        int[] devicePos = {this.device.getX(), this.device.getY()};
+    public float[] getDevicePos() {
+        float[] devicePos = {this.device.getX(), this.device.getY()};
         return devicePos;
     }
 
-    public int[] getRouterPos(int index) {
+    public float[] getRouterPos(int index) {
         // Get current router list
         Router[] routerList = this.device.getRouterList();
         // Check if router list is empty
@@ -237,7 +237,7 @@ public class GPSCoreAPI {
             // Check if input value is a valid array index
             if (index < routerList.length) {
                 // Get indexed router's positional data
-                int[] routerPos = {routerList[index].getX(), routerList[index].getY(), routerList[index].getDist()};
+                float[] routerPos = {routerList[index].getX(), routerList[index].getY(), routerList[index].getDist()};
                 // Return array containing positional data
                 return routerPos;
             }
@@ -247,19 +247,19 @@ public class GPSCoreAPI {
         return null; // Exceptions?
     }
 
-    public int[] getRouterPos(String MACAddr) {
+    public float[] getRouterPos(String MACAddr) {
         // Get current router list
         Router[] routerList = this.device.getRouterList();
         // Check if router list is empty
         if (routerList != null) {
             // Create empty array to hold positional data
-            int[] routerPos = null;
+            float[] routerPos = null;
             // Iterate through the list of routers
             for (int i = 0; i < routerList.length; i++) {
                 // Compare current router's MAC address to the input MAC address
                 if (routerList[i].getMACAddr().equals(MACAddr)) {
                     // MAC address was found so create empty array
-                    routerPos = new int[3];
+                    routerPos = new float[3];
                     // Store positional data from router into the array
                     routerPos[0] = routerList[i].getX();
                     routerPos[1] = routerList[i].getY();
@@ -276,18 +276,18 @@ public class GPSCoreAPI {
         return null;
     }
 
-    public int[][] getAllRouterPos() {
+    public float[][] getAllRouterPos() {
         // Get current router list
         Router[] routerList = this.device.getRouterList();
         // Check if the current router list is a valid list
         if (routerList != null) {
             // Create two dimensional array to store positional data for each listed router
-            int[][] routerListPos = new int[3][routerList.length];
+            float[][] routerListPos = new float[3][routerList.length];
             // Iterate through the router list and store the positional data
             for (int i = 0; i < routerList.length; i++) {
-                routerListPos[0][i] = routerList[i].getX();
-                routerListPos[1][i] = routerList[i].getY();
-                routerListPos[2][i] = routerList[i].getDist();
+                routerListPos[0][i] = routerList[i].getDist();
+                routerListPos[1][i] = routerList[i].getX();
+                routerListPos[2][i] = routerList[i].getY();
             }
 
             // Return the array with populated data
@@ -298,7 +298,7 @@ public class GPSCoreAPI {
         return null; // Exceptions?
     }
 
-    public int getRouterX(int i) {
+    public float getRouterX(int i) {
         Router[] routerList = this.device.getRouterList();
         if (routerList != null) {
             if (i < routerList.length) {
@@ -309,7 +309,7 @@ public class GPSCoreAPI {
         return 0;
     }
 
-    public int getRouterY(int i) {
+    public float getRouterY(int i) {
         Router[] routerList = this.device.getRouterList();
         if (routerList != null) {
             if (i < routerList.length) {
@@ -320,7 +320,7 @@ public class GPSCoreAPI {
         return 0;
     }
 
-    public int getRouterDist(int i) {
+    public float getRouterDist(int i) {
         Router[] routerList = this.device.getRouterList();
         if (routerList != null) {
             if (i < routerList.length) {
@@ -391,14 +391,14 @@ public class GPSCoreAPI {
             this.device.setY(devicePos[1]);
     }
 
-    public void setDevicePos(int x, int y) {
+    public void setDevicePos(float x, float y) {
         if (x > 0)
             this.device.setX(x);
         if (y > 0)
             this.device.setY(y);
     }
 
-    public void setRouterPos(int x, int y, int index) {
+    public void setRouterPos(float x, float y, int index) {
         // Get current list of routers
         Router[] routerList = this.device.getRouterList();
         // If input index is valid then set X and Y position
@@ -407,7 +407,7 @@ public class GPSCoreAPI {
             routerList[index].setY(y);
         }
     }
-    public void setRouterPos(int x, int y, String MACAddr) {
+    public void setRouterPos(float x, float y, String MACAddr) {
         // Get current router list
         Router[] routerList = this.device.getRouterList();
 
@@ -434,7 +434,7 @@ public class GPSCoreAPI {
      *  \param[in] rssi An integer containing the signal strength of the router
      *  \return None
      */
-    public void appendRouterList(int dist, String MACAddr, int rssi) {
+    public void appendRouterList(float dist, String MACAddr, int rssi) {
         boolean isAdded = false;
         boolean isNew = true;
         // Get current router list
@@ -501,5 +501,35 @@ public class GPSCoreAPI {
      */
     public boolean equals(Object o) {
         return (this == o);
+    }
+
+
+    // Format for variables passed to method (distance, xVal, yVal)
+    public float[] calculatePosition() {
+
+        float[][] testVal = getAllRouterPos();
+
+        float tempA, tempB, tempC, tempD, tempE, tempF, outX, outY;
+        // Evaluation for temporary variables using the first and second equations
+        // A = -2*x1 + 2*x2
+        tempA = (-2 * testVal[0][1]) + (2 * testVal[1][1]);
+        // B = -2*y1 + 2*y2
+        tempB = (-2 * testVal[0][2]) + (2 * testVal[1][2]);
+        // C = (r1)^2 - (r2)^2 - (x1)^2 + (x2)^2 - (y1)^2 + (y2)^2
+        tempC = (testVal[0][0] * testVal[0][0]) - (testVal[1][0] * testVal[1][0]) - (testVal[0][1] * testVal[0][1]) + (testVal[1][1] * testVal[1][1]) - (testVal[0][2] * testVal[0][2]) + (testVal[1][2] * testVal[1][2]);
+        // Evaluation for temporary variables using the second and third equations
+        // D = -2*x2 + 2*x3
+        tempD = (-2 * testVal[1][1]) + (2 * testVal[2][1]);
+        // E = -2*y2 + 2*y3
+        tempE = (-2 * testVal[1][2]) + (2 * testVal[2][2]);
+        // F = (r2)^2 - (r3)^2 - (x2)^2 + (x3)^2 - (y2)^2 + (y3)^2
+        tempF = (testVal[1][0] * testVal[1][0]) - (testVal[2][0] * testVal[2][0]) - (testVal[1][1] * testVal[1][1]) + (testVal[2][1] * testVal[2][1]) - (testVal[1][2] * testVal[1][2]) + (testVal[2][2] * testVal[2][2]);
+        // Evaluation temporary variables to find 2-D coordinates
+        // X = (CE-FB)/(EA-BD)
+        outX = ((tempC * tempE) - (tempF * tempB)) / ((tempE * tempA) - (tempB * tempD));
+        // Y = (CD-AF)/(BD-AE)
+        outY = ((tempC * tempD) - (tempA * tempF)) / ((tempB * tempD) - (tempA * tempE));
+        float[] output = {outX, outY};
+        return output;
     }
 }
