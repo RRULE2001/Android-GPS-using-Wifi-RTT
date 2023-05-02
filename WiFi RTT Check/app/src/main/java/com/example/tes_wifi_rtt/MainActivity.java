@@ -171,6 +171,8 @@ public class MainActivity extends Activity {
 
         setCompatible(context);
 
+        ImageView map = findViewById(R.id.map);
+
         ImageButton button = findViewById(R.id.buttonMap);
         button.setOnClickListener(new View.OnClickListener()
         {
@@ -189,6 +191,7 @@ public class MainActivity extends Activity {
             public void onClick(View v)
             {
                // Do stuff here
+
             }
         });
 

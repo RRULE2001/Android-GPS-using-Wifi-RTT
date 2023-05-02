@@ -4,10 +4,9 @@
 <item>
     <shape xmlns:android="http://schemas.android.com/apk/res/android"
         android:shape="rectangle">
-        <solid android:color="@color/kettering_yellow" />
+        <solid android:color="@color/kettering_blue" />
         <corners android:radius="100dp" />
         <size android:height="25dp" android:width="25dp"/>
     </shape>
 </item>
-<item android:drawable="@android:drawable/ic_menu_help" />
 </layer-list>
