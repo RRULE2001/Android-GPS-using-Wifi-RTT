@@ -238,10 +238,10 @@ public class MainActivity extends Activity {
                 Context context = getApplicationContext();
                 scanWifi(context);
 
-                float[] userPosition;
-                userPosition = coreAPI.calculatePosition();
-                System.out.println("X:" + userPosition[0]);
-                System.out.println("Y:" + userPosition[1]);
+                //float[] userPosition;
+                //userPosition = coreAPI.calculatePosition();
+                //System.out.println("X:" + userPosition[0]);
+                //System.out.println("Y:" + userPosition[1]);
             }
             h2.postDelayed(r2,getResources().getInteger(R.integer.scan_delay));
         }
