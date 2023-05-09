@@ -190,7 +190,18 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v)
             {
-               // Do stuff here
+                // Get the map ImageView
+                ImageView map = findViewById(R.id.map);
+
+                // Get the current scale of the map
+                float currentScale = map.getScaleX();
+
+                // Increase the scale by a factor of 1.2
+                float newScale = currentScale * 1.2f;
+
+                // Set the new scale for the map
+                map.setScaleX(newScale);
+                map.setScaleY(newScale);
 
             }
         });
@@ -202,7 +213,18 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v)
             {
-                // Do stuff here
+                // Get the map ImageView
+                ImageView map = findViewById(R.id.map);
+
+                // Get the current scale of the map
+                float currentScale = map.getScaleX();
+
+                // Decrease the scale by a factor of 1.2
+                float newScale = currentScale / 1.2f;
+
+                // Set the new scale for the map
+                map.setScaleX(newScale);
+                map.setScaleY(newScale);
             }
         });
     }
