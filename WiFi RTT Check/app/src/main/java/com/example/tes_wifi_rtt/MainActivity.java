@@ -18,6 +18,7 @@ import android.Manifest;
 import android.Manifest.permission;
 
 import androidx.appcompat.widget.SwitchCompat;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import java.util.List;
 
@@ -110,7 +111,7 @@ public class MainActivity extends Activity {
                             }
 
                             for (int i = 0; i < index; i++) {
-                                coreAPI.appendRouterList(wifiDistance[i], wifiMac[i], wifiSignalStrength[i]); // Adds router to list of routers
+                                coreAPI.appendRouterList(wifiDistance[i], wifiMac[i], wifiSignalStrength[i], context); // Adds router to list of routers
 
                                 TextView textView = new TextView(context);
                                 textView.setTextSize(20);
@@ -238,10 +239,12 @@ public class MainActivity extends Activity {
                 Context context = getApplicationContext();
                 scanWifi(context);
 
-                //float[] userPosition;
-                //userPosition = coreAPI.calculatePosition();
-                //System.out.println("X:" + userPosition[0]);
-                //System.out.println("Y:" + userPosition[1]);
+                float[] userPosition = coreAPI.calculatePosition();
+
+                moveMap(userPosition[0], userPosition[1]);
+
+                System.out.println("X:" + userPosition[0]);
+                System.out.println("Y:" + userPosition[1]);
             }
             h2.postDelayed(r2,getResources().getInteger(R.integer.scan_delay));
         }
@@ -257,5 +260,44 @@ public class MainActivity extends Activity {
         super.onPause();
         h2.removeCallbacks(r2);
 
+    }
+
+    public void moveMap(float x, float y) {
+        float xDP = x*25/2.54f; // offset not yet determined
+        float yDP = y*25/2.336f;
+
+        //float xPositionDP =  410 - xDP;
+        //float yPositionDP =  630 - yDP;
+
+        float xPositionDP = xDP;
+        float yPositionDP = yDP;
+
+        ImageView map = findViewById(R.id.map);
+        View rootView = findViewById(android.R.id.content).getRootView();
+
+        final float scale = getResources().getDisplayMetrics().density;
+
+        int xPopsitionPx = (int) (xPositionDP * scale + 0.5f);
+        int yPopsitionPx = (int) (yPositionDP * scale + 0.5f);
+
+        FrameLayout mapContainer = findViewById(R.id.mapContainer);
+
+        //FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        //lp.setMargins((int)xPopsitionPx, (int)yPopsitionPx, 0, 0);
+        //map.setLayoutParams(lp);
+        mapContainer.setX((int)xPositionDP);
+        mapContainer.setY((int)yPositionDP);
+
+
+        //map.setPadding(xPopsitionPx, yPopsitionPx, 0 ,0);
+
+        /*
+        float newX = map.getLeft() + xPosition;
+        float newY = map.getTop() + yPosition;
+        float maxX = rootView.getWidth() - map.getWidth();
+        float maxY = rootView.getHeight() - map.getHeight();
+        newX = Math.min(Math.max(0, newX), maxX);
+        newY = Math.min(Math.max(0, newY), maxY);
+        map.layout((int)newX, (int)newY, (int)newX + map.getWidth(), (int)newY + map.getHeight());*/
     }
 }

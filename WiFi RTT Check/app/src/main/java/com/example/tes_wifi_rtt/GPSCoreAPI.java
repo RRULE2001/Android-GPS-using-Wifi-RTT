@@ -25,6 +25,9 @@ package com.example.tes_wifi_rtt;
 import java.lang.String;
 import java.util.HashMap;
 import java.util.Arrays;
+import android.widget.*;
+import android.content.Context;
+
 
 /**
  *  \brief This class contains methods and sub-classes for general GPS
@@ -40,7 +43,7 @@ public class GPSCoreAPI {
     /* Public Variables */
     /* Private Variables */
     private final Device device;                        /*!< Object containing information for a single device to record on the GPS. */
-    private final HashMap<String, int[]>lookupTable;    /*!< HashMap containing a list of MAC Addresses and their corresponding X and Y coordinates */
+    private final HashMap<String, float[]>lookupTable;    /*!< HashMap containing a list of MAC Addresses and their corresponding X and Y coordinates */
 
     /* Sub-Classes */
     /**
@@ -87,7 +90,7 @@ public class GPSCoreAPI {
         public Router(float x, float y, float dist, String MACAddr, int rssi) {
             this.x = x;
             this.y = y;
-            this.dist = dist;
+            this.dist = dist/1000;
             this.MACAddr = MACAddr;
             this.rssi = rssi;
         }
@@ -174,7 +177,7 @@ public class GPSCoreAPI {
          *  \return None.
          */
         public void setDist(float dist) {
-            this.dist = dist;
+            this.dist = dist/1000;
         }
 
         /**
@@ -355,9 +358,9 @@ public class GPSCoreAPI {
     public GPSCoreAPI() {
         this.device = new Device();
         this.lookupTable = new HashMap<>();
-        lookupTable.put("70:3a:cb:6e:ce:85", new int[] {1, 1});
-        lookupTable.put("70:3a:cb:29:4b:3a", new int[] {2, 2});
-        lookupTable.put("d8:6c:63:d6:5f:aa", new int[] {3, 3});
+        lookupTable.put("70:3a:cb:6e:ce:85", new float[] {17.78f, 18.22f});
+        lookupTable.put("70:3a:cb:29:4b:3a", new float[] {10.16f, 18.22f});
+        lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {17.78f, 24.30f});
     }
 
     /**
@@ -375,9 +378,9 @@ public class GPSCoreAPI {
         // Create new Device object with input router data
         this.device = new Device(0, 0, router);
         this.lookupTable = new HashMap<>();
-        lookupTable.put("70:3a:cb:6e:ce:85", new int[] {1, 1});
-        lookupTable.put("70:3a:cb:29:4b:3a", new int[] {2, 2});
-        lookupTable.put("d8:6c:63:d6:5f:aa", new int[] {3, 3});
+        lookupTable.put("70:3a:cb:6e:ce:85", new float[] {17.78f, 18.22f});
+        lookupTable.put("70:3a:cb:29:4b:3a", new float[] {10.16f, 18.22f});
+        lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {17.78f, 24.30f});
     }
 
     /* Gets */
@@ -390,7 +393,7 @@ public class GPSCoreAPI {
      * \return A floating integer array containing the positional data of the device.
      */
     public float[] getDevicePos() {
-        return new int[] {this.device.getX(), this.device.getY()};
+        return new float[] {this.device.getX(), this.device.getY()};
     }
 
     /**
@@ -686,7 +689,7 @@ public class GPSCoreAPI {
      *  \param rssi An integer containing the signal strength of the router.
      *  \return None.
      */
-    public void appendRouterList(float dist, String MACAddr, int rssi) {
+    public void appendRouterList(float dist, String MACAddr, int rssi, Context context) {
         boolean isNew = true;
         // Get current router list
         Router[] routerList = this.device.getRouterList();
@@ -707,17 +710,29 @@ public class GPSCoreAPI {
                 }
             }
             // If a new object is being inserted then create new router list with size + 1
-            if(isNew)
+            if(isNew) {
                 newRouterList = new Router[routerList.length + 1];
+                //ImageView router = new ImageView(context);
+                //router.setBackgroundResource(R.drawable.router_icon);
+                //float[] position = this.lookupTable.get(MACAddr);
+                //float xPosition = position[0]*25/2.54f;
+                //float yPosition = position[1]*25/2.336f;
+                //router.setTop(200);
+                //router.setLeft(200);
+                //router.setPadding(200,0,0,0);
+                //router.setX(200);
+                //router.setY(200);
+            }
             // Else current object is just being updated so make new list of the same size
-            else
+            else {
                 newRouterList = new Router[routerList.length];
+            }
 
             // Copies over past data
             System.arraycopy(routerList, 0, newRouterList, 0, routerList.length);
 
             // Search for the input MAC Address in the lookup table
-            int[] routerPos = lookupTable.get(MACAddr);
+            float[] routerPos = lookupTable.get(MACAddr);
             // If the MAC Address was found in the lookup table then create object with the defined positional data
             if (routerPos != null)
                 newRouterList[newRouterList.length - 1] = new Router(routerPos[0], routerPos[1], dist, MACAddr, rssi);
@@ -747,7 +762,7 @@ public class GPSCoreAPI {
             newRouterList = new Router[1];
 
             // Search for the input MAC Address in the lookup table
-            int[] routerPos = lookupTable.get(MACAddr);
+            float[] routerPos = lookupTable.get(MACAddr);
             // If the MAC Address was found in the lookup table then create object with the defined positional data
             if (routerPos != null)
                 newRouterList[0] = new Router(routerPos[0], routerPos[1], dist, MACAddr, rssi);
@@ -778,30 +793,41 @@ public class GPSCoreAPI {
 
     // Format for variables passed to method (distance, xVal, yVal)
     public float[] calculatePosition() {
-
         float[][] testVal = getAllRouterPos();
 
-        float tempA, tempB, tempC, tempD, tempE, tempF, outX, outY;
-        // Evaluation for temporary variables using the first and second equations
-        // A = -2*x1 + 2*x2
-        tempA = (-2 * testVal[0][1]) + (2 * testVal[1][1]);
-        // B = -2*y1 + 2*y2
-        tempB = (-2 * testVal[0][2]) + (2 * testVal[1][2]);
-        // C = (r1)^2 - (r2)^2 - (x1)^2 + (x2)^2 - (y1)^2 + (y2)^2
-        tempC = (testVal[0][0] * testVal[0][0]) - (testVal[1][0] * testVal[1][0]) - (testVal[0][1] * testVal[0][1]) + (testVal[1][1] * testVal[1][1]) - (testVal[0][2] * testVal[0][2]) + (testVal[1][2] * testVal[1][2]);
-        // Evaluation for temporary variables using the second and third equations
-        // D = -2*x2 + 2*x3
-        tempD = (-2 * testVal[1][1]) + (2 * testVal[2][1]);
-        // E = -2*y2 + 2*y3
-        tempE = (-2 * testVal[1][2]) + (2 * testVal[2][2]);
-        // F = (r2)^2 - (r3)^2 - (x2)^2 + (x3)^2 - (y2)^2 + (y3)^2
-        tempF = (testVal[1][0] * testVal[1][0]) - (testVal[2][0] * testVal[2][0]) - (testVal[1][1] * testVal[1][1]) + (testVal[2][1] * testVal[2][1]) - (testVal[1][2] * testVal[1][2]) + (testVal[2][2] * testVal[2][2]);
-        // Evaluation temporary variables to find 2-D coordinates
-        // X = (CE-FB)/(EA-BD)
-        outX = ((tempC * tempE) - (tempF * tempB)) / ((tempE * tempA) - (tempB * tempD));
-        // Y = (CD-AF)/(BD-AE)
-        outY = ((tempC * tempD) - (tempA * tempF)) / ((tempB * tempD) - (tempA * tempE));
-        float[] output = {outX, outY};
+        float tempA, tempB, tempC, tempD, tempE, tempF, outX = 0, outY = 0;
+        float[] output = {0, 0};
+        if(testVal != null) {
+            // Check if there are 3 routers
+            if (testVal.length < 3) {
+                return output;
+            }
+            // Evaluation for temporary variables using the first and second equations
+            // A = -2*x1 + 2*x2
+            tempA = (-2*testVal[0][1])+(2*testVal[1][1]);
+            // B = -2*y1 + 2*y2
+            tempB = (-2*testVal[0][2])+(2*testVal[1][2]);
+            // C = (r1)^2 - (r2)^2 - (x1)^2 + (x2)^2 - (y1)^2 + (y2)^2
+            tempC = (testVal[0][0]*testVal[0][0])-(testVal[1][0]*testVal[1][0])-(testVal[0][1]*testVal[0][1])+(testVal[1][1]*testVal[1][1])-(testVal[0][2]*testVal[0][2])+(testVal[1][2]*testVal[1][2]);
+            // Evaluation for temporary variables using the second and third equations
+            // D = -2*x2 + 2*x3
+            tempD = (-2*testVal[1][1])+(2*testVal[2][1]);
+            // E = -2*y2 + 2*y3
+            tempE = (-2*testVal[1][2])+(2*testVal[2][2]);
+            // F = (r2)^2 - (r3)^2 - (x2)^2 + (x3)^2 - (y2)^2 + (y3)^2
+            tempF = (testVal[1][0]*testVal[1][0])-(testVal[2][0]*testVal[2][0])-(testVal[1][1]*testVal[1][1])+(testVal[2][1]*testVal[2][1])-(testVal[1][2]*testVal[1][2])+(testVal[2][2]*testVal[2][2]);
+            // If denominator does not equal 0, output can be calculated
+            if (!((tempA == 0 || tempE == 0) && (tempB == 0 || tempD == 0)) && ((tempA*tempE) != (tempB*tempD))) {
+                // Evaluation temporary variables to find 2-D coordinates
+                // X = (CE-FB)/(EA-BD)
+                outX = ((tempC*tempE)-(tempF*tempB))/((tempE*tempA)-(tempB*tempD));
+                // Y = (CD-AF)/(BD-AE)
+                outY = ((tempC*tempD)-(tempA*tempF))/((tempB*tempD)-(tempA*tempE));
+            }
+            output[0] = outX;
+            output[1] = outY;
+        }
+
         return output;
     }
 }

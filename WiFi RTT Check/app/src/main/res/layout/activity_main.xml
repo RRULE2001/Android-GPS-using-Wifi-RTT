@@ -21,15 +21,40 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="100dp"
-            android:background="@color/white" >
+            android:background="@color/white">
 
-            <ImageView
-                android:id="@+id/map"
+            <FrameLayout
+                android:id="@+id/mapContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/map"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/map"
+                    android:layout_width="410dp"
+                    android:layout_height="630dp"
+                    android:src="@drawable/map" />
+
+                <ImageView
+                    android:id="@+id/playerImage4"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+
+                    android:src="@drawable/kettering_bulldog" />
+
+                <ImageView
+                    android:id="@+id/playerImage2"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+
+                    android:src="@drawable/kettering_bulldog" />
+
+                <ImageView
+                    android:id="@+id/playerImage3"
+                    android:layout_width="30px"
+                    android:layout_height="10dp"
+
+                    android:src="@drawable/kettering_bulldog" />
+            </FrameLayout>
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/player"
@@ -41,6 +66,7 @@
                 app:cardCornerRadius="25dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
+
                 <ImageView
                     android:id="@+id/playerImage"
                     android:layout_width="match_parent"
@@ -54,8 +80,8 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginRight="15dp"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent">
 
@@ -67,7 +93,7 @@
                     android:background="@drawable/round_button"
                     android:text="+"
                     android:textColor="@color/white"
-                    android:textSize="40sp"/>
+                    android:textSize="40sp" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/buttonZoomOut"
@@ -79,7 +105,8 @@
                     android:textAlignment="center"
                     android:textColor="@color/white"
                     android:textScaleX="1.5"
-                    android:textSize="40sp" /> </LinearLayout>
+                    android:textSize="40sp" />
+            </LinearLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
