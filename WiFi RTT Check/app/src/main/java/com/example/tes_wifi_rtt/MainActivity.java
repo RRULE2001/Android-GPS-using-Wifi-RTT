@@ -229,6 +229,20 @@ public class MainActivity extends Activity {
         });
     }
 
+    public void moveMap(int x, int y) {
+        int offsetX = x; // offset not yet determined
+        int offsetY = y;
+        ImageView map = findViewById(R.id.map);
+        View rootView = findViewById(android.R.id.content).getRootView();
+        int newX = map.getLeft() + offsetX;
+        int newY = map.getTop() + offsetY;
+        int maxX = rootView.getWidth() - map.getWidth();
+        int maxY = rootView.getHeight() - map.getHeight();
+        newX = Math.min(Math.max(0, newX), maxX);
+        newY = Math.min(Math.max(0, newY), maxY);
+        map.layout(newX, newY, newX + map.getWidth(), newY + map.getHeight());
+    }
+
     Runnable r2=new Runnable() {
         @Override
         public void run() {
