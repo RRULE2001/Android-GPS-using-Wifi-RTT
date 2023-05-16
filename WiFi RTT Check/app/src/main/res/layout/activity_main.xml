@@ -23,6 +23,24 @@
             android:layout_marginBottom="100dp"
             android:background="@color/white">
 
+            <androidx.cardview.widget.CardView
+                android:id="@+id/positionContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="230dp"
+                android:layout_marginTop="300dp"
+                app:cardBackgroundColor="#FFFFFF"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/positionText"
+                    android:layout_width="165dp"
+                    android:layout_height="wrap_content"
+                    android:text="(0,0)"
+                    android:textColor="@color/black" />
+            </androidx.cardview.widget.CardView>
+
             <FrameLayout
                 android:id="@+id/mapContainer"
                 android:layout_width="match_parent"
@@ -54,6 +72,7 @@
                     android:layout_height="10dp"
 
                     android:src="@drawable/kettering_bulldog" />
+
             </FrameLayout>
 
             <androidx.cardview.widget.CardView

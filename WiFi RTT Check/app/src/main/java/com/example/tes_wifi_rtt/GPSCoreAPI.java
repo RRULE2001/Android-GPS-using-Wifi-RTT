@@ -97,7 +97,7 @@ public class GPSCoreAPI {
                 this.dist[i] = this.dist[i - 1];
             }
             this.dist[0] = dist/1000f;
-            this.MACAddr = MACAddr;
+            this.MACAddr = MACAddr.trim();
             this.rssi = rssi;
         }
 
@@ -130,7 +130,13 @@ public class GPSCoreAPI {
         *  \return A floating integer representing the distance from the parent device in meters(m).
         */
         public float getDist() {
-            return this.dist[0];
+            float average = 0;
+            final int length = 2;
+            for(int i = 0; i < length; i++){
+                average += this.dist[i];
+            }
+            average /= (float)length;
+            return average;
         }
 
         /**
@@ -196,7 +202,7 @@ public class GPSCoreAPI {
          *  \return None.
          */
         public void setMACAddr(String MACAddr) {
-            this.MACAddr = MACAddr;
+            this.MACAddr = MACAddr.trim();
         }
 
         /**
@@ -382,6 +388,7 @@ public class GPSCoreAPI {
         lookupTable.put("70:3a:cb:6e:ce:85", new float[] {17.78f, 18.22f});
         lookupTable.put("70:3a:cb:29:4b:3a", new float[] {10.16f, 18.22f});
         lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {17.78f, 24.30f});
+        lookupTable.put("60:b7:6e:8c:78:98", new float[] {10.16f, 24.30f});
     }
 
     /**
@@ -402,6 +409,7 @@ public class GPSCoreAPI {
         lookupTable.put("70:3a:cb:6e:ce:85", new float[] {17.78f, 18.22f});
         lookupTable.put("70:3a:cb:29:4b:3a", new float[] {10.16f, 18.22f});
         lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {17.78f, 24.30f});
+        lookupTable.put("60:b7:6e:8c:78:98", new float[] {10.16f, 24.30f});
     }
 
     /* Gets */
@@ -493,7 +501,7 @@ public class GPSCoreAPI {
             // Create two dimensional array to store positional data for each listed router
             double[][] routerListPos = new double[3][routerList.length];
             // Iterate through the router list and store the positional data
-            for (int i = 0; i < routerList.length; i++) {
+            for (int i = 0; i < routerList.length - 1; i++) {
                 routerListPos[i][0] = routerList[i].getDist();
                 routerListPos[i][1] = routerList[i].getX();
                 routerListPos[i][2] = routerList[i].getY();
@@ -711,47 +719,44 @@ public class GPSCoreAPI {
      *  \return None.
      */
     public void appendRouterList(float dist, String MACAddr, int rssi, Context context) {
-        boolean isNew = true;
-        // Get current router list
-        Router[] routerList = this.device.getRouterList();
-        // Create empty router list
-        Router[] newRouterList;
-        // Check if current router list is empty
-        if (routerList != null) {
-            // Iterate through router list to see if input MAC address already exists
-            for (int i = 0; i < routerList.length; i++) {
-                // If MAC address is found then delete current object and shift remaining objects
-                if (routerList[i].getMACAddr().equals(MACAddr)) {
-                    for(int k = i; k < routerList.length - 1; k++){
+        boolean isNew = true; // Checks that the data is new to the list of routers
+
+        Router[] routerList = this.device.getRouterList(); // Gets previous data of router list
+
+        Router[] newRouterList; // Creates new router list to manipulate and add/update data
+
+        if (routerList != null) { // Checks that the routers list is available
+            for (int i = 0; i < routerList.length; i++) { // Iterate through router list to see if input MAC address already exists
+                if (routerList[i].getMACAddr().equals(MACAddr)) { // If MAC address is found then delete current object and shift remaining objects
+                    for(int k = i; k < routerList.length - 1; k++){ // Shifting over previous data over removed element
                         routerList[k] = routerList[k + 1];
                     }
-                    routerList[routerList.length - 1] = null;
-                    isNew = false;
+                    routerList[routerList.length - 1] = null; // Removes last element of list
+                    isNew = false; // The data inputted is not new to the list
                     break;
                 }
             }
-            // If a new object is being inserted then create new router list with size + 1
-            if(isNew) {
-                newRouterList = new Router[routerList.length + 1];
 
+            if(isNew) { // If a new object is being inserted then create new router list with size + 1
+                newRouterList = new Router[routerList.length + 1];
             }
-            // Else current object is just being updated so make new list of the same size
-            else {
+            else { // Else current object is just being updated so make new list of the same size
                 newRouterList = new Router[routerList.length];
             }
 
-            // Copies over past data
-            System.arraycopy(routerList, 0, newRouterList, 0, routerList.length);
+            System.arraycopy(routerList, 0, newRouterList, 0, routerList.length); // Copies over past data
 
-            // Search for the input MAC Address in the lookup table
-            float[] routerPos = lookupTable.get(MACAddr);
-            // If the MAC Address was found in the lookup table then create object with the defined positional data
-            if (routerPos != null)
-                newRouterList[newRouterList.length - 1] = new Router(routerPos[0], routerPos[1], dist, MACAddr, rssi);
-            // Else MAC Address was not found in the lookup table so create object with no positional data
-            else
-                newRouterList[newRouterList.length - 1] = new Router(0, 0, dist, MACAddr, rssi);
+            float[] routerPos = lookupTable.get(MACAddr); // Search for the input MAC Address in the lookup table
 
+            if (routerPos != null) // If the MAC Address was found in the lookup table then create object with the defined positional data
+                newRouterList[newRouterList.length - 1] = new Router(routerPos[0], routerPos[1], dist, MACAddr, rssi); // Inserts position from lookup table
+            else // Else MAC Address was not found in the lookup table so create object with no positional data
+                newRouterList[newRouterList.length - 1] = new Router(0, 0, dist, MACAddr, rssi); // Defaults new router position to 0,0
+
+
+            Router newData = newRouterList[newRouterList.length - 1]; // Temp variable for new data to insert
+
+            // CONTINUE FROM HERE
             // Shift the router objects to sort the list by RSSI then by distance
             for (int i = 0; i < newRouterList.length; i++) {
                 for (int j = i; j < newRouterList.length - 1; j++) {
@@ -760,7 +765,7 @@ public class GPSCoreAPI {
                         newRouterList[i] = newRouterList[i + 1];
                         newRouterList[i + 1] = temp;
                     }
-                    else if(newRouterList[i].getRSSI() == newRouterList[i + 1].getRSSI()){
+                    else if(newRouterList[i].getRSSI() == newRouterList[i + 1].getRSSI()) {
                         if (newRouterList[i].getDist() > newRouterList[i + 1].getDist()) {
                             Router temp = newRouterList[i];
                             newRouterList[i] = newRouterList[i + 1];
@@ -769,7 +774,8 @@ public class GPSCoreAPI {
                     }
                 }
             }
-        } else {
+        }
+        else {
             // Router list is empty so create a new list
             newRouterList = new Router[1];
 

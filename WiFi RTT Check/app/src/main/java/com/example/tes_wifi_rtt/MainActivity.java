@@ -21,6 +21,9 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
+
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 public class MainActivity extends Activity {
@@ -114,7 +117,9 @@ public class MainActivity extends Activity {
 
                             for (int i = 0; i < index; i++) {
                                 coreAPI.appendRouterList(wifiDistance[i], wifiMac[i], wifiSignalStrength[i], context); // Adds router to list of routers
+                            }
 
+                            for (int i = 0; i < index; i++) {
                                 TextView textView = new TextView(context);
                                 textView.setTextSize(20);
                                 textView.setTextColor(Color.BLACK);
@@ -244,6 +249,8 @@ public class MainActivity extends Activity {
 
                 moveMap((int)userPosition[0], (int)userPosition[1]);
 
+                TextView position = findViewById(R.id.positionText);
+                position.setText("(" + userPosition[0] + "," + userPosition[1] + ")");
                 System.out.println("X:" + userPosition[0] + "Y:" + userPosition[1]);
             }
             h2.postDelayed(r2,getResources().getInteger(R.integer.scan_delay));
@@ -263,14 +270,15 @@ public class MainActivity extends Activity {
     }
 
     public void moveMap(float x, float y) {
-        float xDP = x*25/2.54f; // offset not yet determined
-        float yDP = y*25/2.336f;
+        float xDP = x*25/2.6f; // offset not yet determined
+        float yDP = y*25/2.6f;
 
-        //float xPositionDP =  410 - xDP;
-        //float yPositionDP =  630 - yDP;
+        float xPositionDP =  410/2 - xDP;
+        float yPositionDP =  630/2 - yDP;
 
-        float xPositionDP = xDP;
-        float yPositionDP = yDP;
+
+        //float xPositionDP = xDP;
+        //float yPositionDP = yDP;
 
         ImageView map = findViewById(R.id.map);
         View rootView = findViewById(android.R.id.content).getRootView();
@@ -285,8 +293,8 @@ public class MainActivity extends Activity {
         //FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         //lp.setMargins((int)xPopsitionPx, (int)yPopsitionPx, 0, 0);
         //map.setLayoutParams(lp);
-        mapContainer.setX((int)xPositionDP);
-        mapContainer.setY((int)yPositionDP);
+        mapContainer.setX((int)xPopsitionPx);
+        mapContainer.setY((int)yPopsitionPx);
 
 
         //map.setPadding(xPopsitionPx, yPopsitionPx, 0 ,0);
