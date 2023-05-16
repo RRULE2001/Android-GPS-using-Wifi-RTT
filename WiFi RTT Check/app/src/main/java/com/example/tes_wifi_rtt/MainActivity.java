@@ -199,6 +199,12 @@ public class MainActivity extends Activity {
                 // Increase the scale by a factor of 1.2
                 float newScale = currentScale * 1.2f;
 
+                float maxScale = 5f;
+
+                if (newScale > maxScale) {
+                    newScale = maxScale;
+                }
+
                 // Set the new scale for the map
                 map.setScaleX(newScale);
                 map.setScaleY(newScale);
@@ -221,6 +227,12 @@ public class MainActivity extends Activity {
 
                 // Decrease the scale by a factor of 1.2
                 float newScale = currentScale / 1.2f;
+
+                float minScale = .8f;
+
+                if (newScale < minScale) {
+                    newScale = minScale;
+                }
 
                 // Set the new scale for the map
                 map.setScaleX(newScale);
