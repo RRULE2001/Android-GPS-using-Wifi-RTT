@@ -26,7 +26,10 @@ import java.lang.String;
 import java.util.HashMap;
 import java.util.Arrays;
 import android.widget.*;
+import android.view.*;
 import android.content.Context;
+
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 
 /**
@@ -59,7 +62,7 @@ public class GPSCoreAPI {
         /* Private Variables */
         private float x;          /*!< X coordinate of router on cartesian grid. */
         private float y;          /*!< Y coordinate of router on cartesian grid.  */
-        private float dist;       /*!< Distance from the router in millimeters(mm). */
+        private float[] dist = new float[10];     /*!< Distance from the router in meters(m). */
         private String MACAddr; /*!< Human readable string of the MAC address of the router. */
         private int rssi;       /*!< Signal strength of the router; typical range: -55 to -90. */
 
@@ -73,7 +76,7 @@ public class GPSCoreAPI {
         public Router() {
             this.x = 0;
             this.y = 0;
-            this.dist = 0;
+            this.dist = new float[10];
             this.MACAddr = null;
             this.rssi = 0;
         }
@@ -83,14 +86,17 @@ public class GPSCoreAPI {
          *
          *  \param x A floating integer containing the X position of the router on a cartesian grid.
          *  \param y A floating integer containing the Y position of the router ona cartesian grid.
-         *  \param dist A floating integer containing the distance in millimeters(mm) from a device.
+         *  \param dist A floating integer containing the distance in meters(m) from a device.
          *  \param MACAddr A String object of the router's MAC Address.
          *  \param rssi An integer containing the signal strength of the router to a device.
          */
         public Router(float x, float y, float dist, String MACAddr, int rssi) {
             this.x = x;
             this.y = y;
-            this.dist = dist/1000;
+            for (int i = this.dist.length - 1; i > 0; i--) {
+                this.dist[i] = this.dist[i - 1];
+            }
+            this.dist[0] = dist/1000f;
             this.MACAddr = MACAddr;
             this.rssi = rssi;
         }
@@ -118,13 +124,13 @@ public class GPSCoreAPI {
         }
 
         /**
-        *  \brief Gets the current distance in millimeters(mm) from a device.
+        *  \brief Gets the current distance in meters(m) from a device.
         *
         *  \param None.
-        *  \return A floating integer representing the distance from the parent device in millimeters(mm).
+        *  \return A floating integer representing the distance from the parent device in meters(m).
         */
         public float getDist() {
-            return this.dist;
+            return this.dist[0];
         }
 
         /**
@@ -171,13 +177,16 @@ public class GPSCoreAPI {
         }
 
         /**
-         *  \brief Sets the router's distance from the parent device in millimeters(mm).
+         *  \brief Sets the router's distance from the parent device in meters(m).
          *
-         *  \param dist A floating integer containing the distance in millimeters(mm) from the parent device.
+         *  \param dist A floating integer containing the distance in meters(m) from the parent device.
          *  \return None.
          */
         public void setDist(float dist) {
-            this.dist = dist/1000;
+            for (int i = this.dist.length - 1; i > 0; i--) {
+                this.dist[i] = this.dist[i - 1];
+            }
+            this.dist[0] = dist/1000f;
         }
 
         /**
@@ -232,8 +241,8 @@ public class GPSCoreAPI {
     private static class Device {
         /* Public Variables */
         /* Private Variables */
-        private float x;                  /*!< The X position on a cartesian grid. */
-        private float y;                  /*!< The Y position on a cartesian grid. */
+        private float[] x = new float[10];                  /*!< The X position on a cartesian grid. */
+        private float[] y = new float[10];                  /*!< The Y position on a cartesian grid. */
         private Router[] routerList;    /*!< Contains a list of routers used for triangulating the parent devices position. Sorted by RSSI then distance. */
 
         /* Constructor(s) */
@@ -244,8 +253,8 @@ public class GPSCoreAPI {
          *  \param None.
          */
         public Device() {
-            this.x = 0;
-            this.y = 0;
+            this.x = new float[10];
+            this.y = new float[10];
             this.routerList = null;
         }
 
@@ -257,8 +266,14 @@ public class GPSCoreAPI {
          *  \param routerList A list of routers used for triangulating the parent devices position.
          */
         public Device(float x, float y, Router[] routerList) {
-            this.x = x;
-            this.y =y;
+            for (int i = this.x.length - 1; i > 0; i--) {
+                this.x[i] = this.x[i - 1];
+            }
+            this.x[0] = x;
+            for (int i = this.y.length - 1; i > 0; i--) {
+                this.y[i] = this.y[i - 1];
+            }
+            this.y[0] = y;
             this.routerList = routerList;
         }
 
@@ -271,7 +286,7 @@ public class GPSCoreAPI {
          * \return An floating integer containing the X position of the device.
          */
         public float getX() {
-            return this.x;
+            return this.x[0];
         }
 
         /**
@@ -281,7 +296,7 @@ public class GPSCoreAPI {
          * \return A floating integer containing the Y position of the device.
          */
         public float getY() {
-            return this.y;
+            return this.y[0];
         }
 
         /**
@@ -303,7 +318,10 @@ public class GPSCoreAPI {
          * \return None.
          */
         public void setX(float x) {
-            this.x = x;
+            for (int i = this.x.length - 1; i > 0; i--) {
+                this.x[i] = this.x[i - 1];
+            }
+            this.x[0] = x;
         }
 
         /**
@@ -313,7 +331,10 @@ public class GPSCoreAPI {
          * \return None.
          */
         public void setY(float y) {
-            this.y = y;
+            for (int i = this.y.length - 1; i > 0; i--) {
+                this.y[i] = this.y[i - 1];
+            }
+            this.y[0] = y;
         }
 
         /**
@@ -398,8 +419,8 @@ public class GPSCoreAPI {
 
     /**
      * \brief Gets a specific routers positional data using an input index of the array list.
-     *        Index 0 of the array contains the X position, index 1 contains the Y position, and
-     *        index 2 contains the distance.
+     *        Index 0 of the array contains the distance, index 1 contains the X position, and
+     *        index 2 contains the Y position.
      *
      * \param index An integer containing the index of the router in the router array list.
      * \return A floating integer array containing the positional data of the router.
@@ -412,7 +433,7 @@ public class GPSCoreAPI {
             // Check if input value is a valid array index
             if (index < routerList.length) {
                 // Return array containing positional data
-                return new float[] {routerList[index].getX(), routerList[index].getY(), routerList[index].getDist()};
+                return new float[] {routerList[index].getDist(), routerList[index].getX(), routerList[index].getY()};
             }
         }
 
@@ -423,7 +444,7 @@ public class GPSCoreAPI {
     /**
      * \brief Gets a specific routers positional data using an input MAC Address. It searches the
      *        router list for the MAC Address and returns the positional data in the following
-     *        format: {X, Y, Distance}. Returns null if the MAC Address was not found in the list.
+     *        format: {Distance, X, Y}. Returns null if the MAC Address was not found in the list.
      *
      * \param MACAddr A String object containing the MAC Address of the router to search for.
      * \return A floating integer array containing the positional data of the specified router.
@@ -442,9 +463,9 @@ public class GPSCoreAPI {
                     // MAC address was found so create empty array
                     routerPos = new float[3];
                     // Store positional data from router into the array
-                    routerPos[0] = router.getX();
+                    routerPos[0] = router.getDist();
                     routerPos[1] = router.getY();
-                    routerPos[2] = router.getDist();
+                    routerPos[2] = router.getX();
                     // Exit loop
                     break;
                 }
@@ -459,23 +480,23 @@ public class GPSCoreAPI {
 
     /**
      * \brief Gets the positional data of all routers in the list. Returns the data as a double
-     *        array using the following format: {X, Y, Distance}{Router Index}.
+     *        array using the following format: {Distance, X, Y}{Router Index}.
      *
      * \param None.
      * \return A double sized array containing the positional data of every router in the list.
      */
-    public float[][] getAllRouterPos() {
+    public double[][] getAllRouterPos() {
         // Get current router list
         Router[] routerList = this.device.getRouterList();
         // Check if the current router list is a valid list
         if (routerList != null) {
             // Create two dimensional array to store positional data for each listed router
-            float[][] routerListPos = new float[3][routerList.length];
+            double[][] routerListPos = new double[3][routerList.length];
             // Iterate through the router list and store the positional data
             for (int i = 0; i < routerList.length; i++) {
-                routerListPos[0][i] = routerList[i].getDist();
-                routerListPos[1][i] = routerList[i].getX();
-                routerListPos[2][i] = routerList[i].getY();
+                routerListPos[i][0] = routerList[i].getDist();
+                routerListPos[i][1] = routerList[i].getX();
+                routerListPos[i][2] = routerList[i].getY();
             }
 
             // Return the array with populated data
@@ -637,7 +658,7 @@ public class GPSCoreAPI {
     }
 
     /**
-     * \brief Sets a specific rotuers positional data using an index in the router array list.
+     * \brief Sets a specific router's positional data using an index in the router array list.
      *
      * \param x A floating integer containing the X position to store.
      * \param y A floating integer containing the Y position to store.
@@ -712,16 +733,7 @@ public class GPSCoreAPI {
             // If a new object is being inserted then create new router list with size + 1
             if(isNew) {
                 newRouterList = new Router[routerList.length + 1];
-                //ImageView router = new ImageView(context);
-                //router.setBackgroundResource(R.drawable.router_icon);
-                //float[] position = this.lookupTable.get(MACAddr);
-                //float xPosition = position[0]*25/2.54f;
-                //float yPosition = position[1]*25/2.336f;
-                //router.setTop(200);
-                //router.setLeft(200);
-                //router.setPadding(200,0,0,0);
-                //router.setX(200);
-                //router.setY(200);
+
             }
             // Else current object is just being updated so make new list of the same size
             else {
@@ -773,6 +785,9 @@ public class GPSCoreAPI {
         this.device.setRouterList(newRouterList);
     }
 
+
+
+
     /**
      *  \brief This function compares the input object to this object and outputs whether the
      *         objects are equal.
@@ -792,11 +807,11 @@ public class GPSCoreAPI {
 
 
     // Format for variables passed to method (distance, xVal, yVal)
-    public float[] calculatePosition() {
-        float[][] testVal = getAllRouterPos();
+    public double[] calculatePosition() {
+        double[][] testVal = getAllRouterPos();
 
-        float tempA, tempB, tempC, tempD, tempE, tempF, outX = 0, outY = 0;
-        float[] output = {0, 0};
+        double tempA, tempB, tempC, tempD, tempE, tempF, outX = 0, outY = 0;
+        double[] output = {0, 0};
         if(testVal != null) {
             // Check if there are 3 routers
             if (testVal.length < 3) {

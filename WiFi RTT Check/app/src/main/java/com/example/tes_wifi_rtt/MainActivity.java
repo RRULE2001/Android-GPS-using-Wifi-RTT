@@ -19,6 +19,7 @@ import android.Manifest.permission;
 
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.app.ActivityCompat;
 import java.util.List;
 
@@ -100,7 +101,8 @@ public class MainActivity extends Activity {
                                     wifiMac[index] = String.valueOf(results.get(i).getMacAddress());
                                     wifiSignalStrength[index] = results.get(i).getRssi();
                                     wifiDistance[index++] = results.get(i).getDistanceMm();
-                                } else { // If STATUS_FAIL
+                                }
+                                else { // If STATUS_FAIL
                                     wifiMac[i] = "FAIL";
                                     wifiSignalStrength[i] = 0;
                                     wifiDistance[i] = 0;
@@ -233,18 +235,16 @@ public class MainActivity extends Activity {
     Runnable r2=new Runnable() {
         @Override
         public void run() {
-            //Your Toast
             Switch switch1 = findViewById(R.id.switch1);
             if (switch1.isChecked()) {
                 Context context = getApplicationContext();
                 scanWifi(context);
 
-                float[] userPosition = coreAPI.calculatePosition();
+                double[] userPosition = coreAPI.calculatePosition();
 
-                moveMap(userPosition[0], userPosition[1]);
+                moveMap((int)userPosition[0], (int)userPosition[1]);
 
-                System.out.println("X:" + userPosition[0]);
-                System.out.println("Y:" + userPosition[1]);
+                System.out.println("X:" + userPosition[0] + "Y:" + userPosition[1]);
             }
             h2.postDelayed(r2,getResources().getInteger(R.integer.scan_delay));
         }
@@ -299,5 +299,34 @@ public class MainActivity extends Activity {
         newX = Math.min(Math.max(0, newX), maxX);
         newY = Math.min(Math.max(0, newY), maxY);
         map.layout((int)newX, (int)newY, (int)newX + map.getWidth(), (int)newY + map.getHeight());*/
+    }
+
+    public void placeRouter(Context context){
+        ConstraintSet constraints = new ConstraintSet();
+        ImageButton router = new ImageButton(context);
+        router.setImageResource(R.drawable.round_button);
+
+        router.setBackgroundColor(0xFF2452A2); // Sets color to kettering blue
+        router.setBackgroundResource(R.drawable.place_router_button);
+        router.setImageResource(android.R.drawable.ic_dialog_map);
+
+
+        //float[] positionMeters = this.lookupTable.get(MACAddr);
+        //float xPositionDP = positionMeters[0]*25/2.54f;
+        //float yPositionDP = positionMeters[1]*25/2.336f;
+
+        //final float scale = getResources().getDisplayMetrics().density;
+
+        //int xPopsitionPx = (int) (xPositionDP * scale + 0.5f);
+        //int yPopsitionPx = (int) (yPositionDP * scale + 0.5f);
+
+        //router.setTop(200);
+        //router.setLeft(200);
+        //router.setPadding(200,0,0,0);
+        //router.setX((int)xPositionDP);
+        //router.setY((int)yPositionDP);
+
+        router.setX(0);
+        router.setY(0);
     }
 }
