@@ -389,6 +389,9 @@ public class GPSCoreAPI {
         lookupTable.put("70:3a:cb:29:4b:3a", new float[] {10.16f, 18.22f});
         lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {17.78f, 24.30f});
         lookupTable.put("60:b7:6e:8c:78:98", new float[] {10.16f, 24.30f});
+        lookupTable.put("60:b7:6e:a3:73:1a", new float[] {10.16f, 24.30f});
+        lookupTable.put("60:b7:6e:a3:72:07", new float[] {10.16f, 24.30f});
+
     }
 
     /**
@@ -410,6 +413,8 @@ public class GPSCoreAPI {
         lookupTable.put("70:3a:cb:29:4b:3a", new float[] {10.16f, 18.22f});
         lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {17.78f, 24.30f});
         lookupTable.put("60:b7:6e:8c:78:98", new float[] {10.16f, 24.30f});
+        lookupTable.put("60:b7:6e:a3:73:1a", new float[] {10.16f, 24.30f});
+        lookupTable.put("60:b7:6e:a3:72:07", new float[] {10.16f, 24.30f});
     }
 
     /* Gets */
