@@ -23,7 +23,7 @@
             android:layout_marginBottom="100dp"
             android:background="@color/white">
 
-<<<<<<< HEAD
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/positionContainer"
                 android:layout_width="wrap_content"
@@ -31,19 +31,12 @@
                 android:layout_marginStart="230dp"
                 android:layout_marginTop="300dp"
                 app:cardBackgroundColor="#FFFFFF"
-=======
-            <ImageView
-                android:id="@+id/map"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/map"
->>>>>>> origin/mapPositioning
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:id="@+id/positionText"
-                    android:layout_width="165dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="(0,0)"
                     android:textColor="@color/black" />
@@ -52,12 +45,15 @@
             <FrameLayout
                 android:id="@+id/mapContainer"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:id="@+id/map"
-                    android:layout_width="410dp"
+                    android:layout_width="400dp"
                     android:layout_height="630dp"
+                    android:rotation="270"
                     android:src="@drawable/map" />
 
                 <ImageView

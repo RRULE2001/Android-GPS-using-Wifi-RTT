@@ -276,7 +276,7 @@ public class MainActivity extends Activity {
                 moveMap((int)userPosition[0], (int)userPosition[1]);
 
                 TextView position = findViewById(R.id.positionText);
-                position.setText("(" + userPosition[0] + "," + userPosition[1] + ")");
+                position.setText("(" + String.format("%.2f", userPosition[0]) + "," + String.format("%.2f", userPosition[1]) + ")");
                 System.out.println("X:" + userPosition[0] + "Y:" + userPosition[1]);
             }
             h2.postDelayed(r2,getResources().getInteger(R.integer.scan_delay));
@@ -296,8 +296,8 @@ public class MainActivity extends Activity {
     }
 
     public void moveMap(float x, float y) {
-        float xDP = x*25/2.6f; // offset not yet determined
-        float yDP = y*25/2.6f;
+        float xDP = x*13/2.6f; // offset not yet determined
+        float yDP = y*13/2.6f;
 
         float xPositionDP =  410/2 - xDP;
         float yPositionDP =  630/2 - yDP;
