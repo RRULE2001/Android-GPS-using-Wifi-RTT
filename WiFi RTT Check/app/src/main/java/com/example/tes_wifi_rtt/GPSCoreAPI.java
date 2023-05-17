@@ -385,12 +385,13 @@ public class GPSCoreAPI {
     public GPSCoreAPI() {
         this.device = new Device();
         this.lookupTable = new HashMap<>();
-        lookupTable.put("70:3a:cb:6e:ce:85", new float[] {17.78f, 18.22f});
-        lookupTable.put("70:3a:cb:29:4b:3a", new float[] {10.16f, 18.22f});
-        lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {17.78f, 24.30f});
-        lookupTable.put("60:b7:6e:8c:78:98", new float[] {10.16f, 24.30f});
-        lookupTable.put("60:b7:6e:a3:73:1a", new float[] {10.16f, 24.30f});
-        lookupTable.put("60:b7:6e:a3:72:07", new float[] {10.16f, 24.30f});
+        lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {15.63f, 31.26f});
+        lookupTable.put("70:3a:cb:29:4b:3a", new float[] {35.17f, 46.89f});
+        lookupTable.put("70:3a:cb:6e:ce:85", new float[] {28.33f, 65.45f});
+        lookupTable.put("60:b7:6e:8c:78:98", new float[] {15.63f, 74.25f});
+
+        lookupTable.put("60:b7:6e:a3:73:1a", new float[] {0f, 0f});
+        lookupTable.put("60:b7:6e:a3:72:07", new float[] {0f, 0f});
 
     }
 
@@ -409,12 +410,13 @@ public class GPSCoreAPI {
         // Create new Device object with input router data
         this.device = new Device(0, 0, router);
         this.lookupTable = new HashMap<>();
-        lookupTable.put("70:3a:cb:6e:ce:85", new float[] {17.78f, 18.22f});
-        lookupTable.put("70:3a:cb:29:4b:3a", new float[] {10.16f, 18.22f});
-        lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {17.78f, 24.30f});
-        lookupTable.put("60:b7:6e:8c:78:98", new float[] {10.16f, 24.30f});
-        lookupTable.put("60:b7:6e:a3:73:1a", new float[] {10.16f, 24.30f});
-        lookupTable.put("60:b7:6e:a3:72:07", new float[] {10.16f, 24.30f});
+        lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {15.63f, 31.26f});
+        lookupTable.put("70:3a:cb:29:4b:3a", new float[] {35.17f, 46.89f});
+        lookupTable.put("70:3a:cb:6e:ce:85", new float[] {28.33f, 65.45f});
+        lookupTable.put("60:b7:6e:8c:78:98", new float[] {15.63f, 74.25f});
+
+        lookupTable.put("60:b7:6e:a3:73:1a", new float[] {0f, 0f});
+        lookupTable.put("60:b7:6e:a3:72:07", new float[] {0f, 0f});
     }
 
     /* Gets */
@@ -504,7 +506,7 @@ public class GPSCoreAPI {
         // Check if the current router list is a valid list
         if (routerList != null) {
             // Create two dimensional array to store positional data for each listed router
-            double[][] routerListPos = new double[3][routerList.length];
+            double[][] routerListPos = new double[routerList.length][3];
             // Iterate through the router list and store the positional data
             for (int i = 0; i < routerList.length - 1; i++) {
                 routerListPos[i][0] = routerList[i].getDist();
