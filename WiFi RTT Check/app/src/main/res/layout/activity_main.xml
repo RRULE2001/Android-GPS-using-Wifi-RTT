@@ -23,6 +23,7 @@
             android:layout_marginBottom="100dp"
             android:background="@color/white">
 
+<<<<<<< HEAD
             <androidx.cardview.widget.CardView
                 android:id="@+id/positionContainer"
                 android:layout_width="wrap_content"
@@ -30,6 +31,13 @@
                 android:layout_marginStart="230dp"
                 android:layout_marginTop="300dp"
                 app:cardBackgroundColor="#FFFFFF"
+=======
+            <ImageView
+                android:id="@+id/map"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/map"
+>>>>>>> origin/mapPositioning
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
