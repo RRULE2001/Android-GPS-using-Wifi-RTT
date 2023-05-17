@@ -207,7 +207,7 @@ public class MainActivity extends Activity {
                 // Increase the scale by a factor of 1.2
                 float newScale = currentScale * 1.2f;
 
-                float maxScale = 5f;
+                float maxScale = 4f;
 
                 if (newScale > maxScale) {
                     newScale = maxScale;
@@ -236,7 +236,7 @@ public class MainActivity extends Activity {
                 // Decrease the scale by a factor of 1.2
                 float newScale = currentScale / 1.2f;
 
-                float minScale = .8f;
+                float minScale = 1f;
 
                 if (newScale < minScale) {
                     newScale = minScale;
