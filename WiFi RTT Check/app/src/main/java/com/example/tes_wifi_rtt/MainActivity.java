@@ -273,7 +273,7 @@ public class MainActivity extends Activity {
 
                 double[] userPosition = coreAPI.calculatePosition();
 
-                moveMap((int)userPosition[0], (int)userPosition[1]);
+                moveMapplease((int)userPosition[0], (int)userPosition[1]);
 
                 TextView position = findViewById(R.id.positionText);
                 position.setText("(" + String.format("%.2f", userPosition[0]) + "," + String.format("%.2f", userPosition[1]) + ")");
@@ -295,19 +295,21 @@ public class MainActivity extends Activity {
 
     }
 
-    public void moveMap(float x, float y) {
-        float xDP = x*13/2.6f; // offset not yet determined
-        float yDP = y*13/2.6f;
+    public void moveMapplease(float x, float y) {
+        float xDP = x*13/2.54f; // offset not yet determined
+        float yDP = y*13/2.54f;
 
-        float xPositionDP =  410/2 - xDP;
-        float yPositionDP =  630/2 - yDP;
+        //float xPositionDP =  410/2 - xDP;
+        //float yPositionDP =  630/2 - yDP;
 
+        float xPositionDP =  380/2 - xDP;
+        float yPositionDP =  760/2 - yDP;
 
         //float xPositionDP = xDP;
         //float yPositionDP = yDP;
 
-        ImageView map = findViewById(R.id.map);
-        View rootView = findViewById(android.R.id.content).getRootView();
+        //ImageView map = findViewById(R.id.map);
+        //View rootView = findViewById(android.R.id.content).getRootView();
 
         final float scale = getResources().getDisplayMetrics().density;
 
@@ -316,7 +318,9 @@ public class MainActivity extends Activity {
 
         FrameLayout mapContainer = findViewById(R.id.mapContainer);
 
-        //FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        //FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(mapContainer.getWidth(), mapContainer.getHeight());
+        //lp.leftMargin = xPopsitionPx;
+        //lp.topMargin = yPopsitionPx;
         //lp.setMargins((int)xPopsitionPx, (int)yPopsitionPx, 0, 0);
         //map.setLayoutParams(lp);
         mapContainer.setX((int)xPopsitionPx);
@@ -324,6 +328,10 @@ public class MainActivity extends Activity {
 
 
         //map.setPadding(xPopsitionPx, yPopsitionPx, 0 ,0);
+
+        //LinearLayout player = findViewById(R.id.playerContainer);
+        //player.setX(xPopsitionPx);
+        //player.setY(yPopsitionPx);
 
         /*
         float newX = map.getLeft() + xPosition;

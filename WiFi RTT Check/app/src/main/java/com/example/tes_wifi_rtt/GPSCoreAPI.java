@@ -385,15 +385,15 @@ public class GPSCoreAPI {
     public GPSCoreAPI() {
         this.device = new Device();
         this.lookupTable = new HashMap<>();
-        lookupTable.put("70:3a:cb:29:4b:3a", new float[] {35.17f, 46.89f});
         lookupTable.put("70:3a:cb:6e:ce:85", new float[] {28.33f, 65.45f});
         lookupTable.put("60:b7:6e:8c:78:98", new float[] {15.63f, 74.25f});
-        lookupTable.put("60:b7:6e:a3:73:1a", new float[] {0f, 0f});
-        lookupTable.put("60:b7:6e:a3:72:07", new float[] {0f, 0f});
-        lookupTable.put("9c:4f:5f:0b:ac:b4", new float[] {0f, 0f});
-        lookupTable.put("9c:4f:5f:0b:a9:5a", new float[] {0f, 0f});
-        lookupTable.put("9c:4f:5f:0b:ad:6f", new float[] {0f, 0f});
-        lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {0f, 0f});
+        lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {15.63f, 79.72f});
+        lookupTable.put("60:b7:6e:a3:73:1a", new float[] {19.54f, 76.79f});
+        lookupTable.put("70:3a:cb:29:4b:3a", new float[] {37.12f, 42.98f});
+        lookupTable.put("60:b7:6e:a3:72:07", new float[] {37.12f, 51.78f});
+        lookupTable.put("9c:4f:5f:0b:ac:b4", new float[] {46.89f, 46.89f});
+        lookupTable.put("9c:4f:5f:0b:a9:5a", new float[] {23.45f, 67.41f});
+        lookupTable.put("9c:4f:5f:0b:ad:6f", new float[] {31.65f, 58.62f});
 
     }
 
@@ -412,15 +412,15 @@ public class GPSCoreAPI {
         // Create new Device object with input router data
         this.device = new Device(0, 0, router);
         this.lookupTable = new HashMap<>();
-        lookupTable.put("70:3a:cb:29:4b:3a", new float[] {35.17f, 46.89f});
         lookupTable.put("70:3a:cb:6e:ce:85", new float[] {28.33f, 65.45f});
         lookupTable.put("60:b7:6e:8c:78:98", new float[] {15.63f, 74.25f});
-        lookupTable.put("60:b7:6e:a3:73:1a", new float[] {0f, 0f});
-        lookupTable.put("60:b7:6e:a3:72:07", new float[] {0f, 0f});
-        lookupTable.put("9c:4f:5f:0b:ac:b4", new float[] {0f, 0f});
-        lookupTable.put("9c:4f:5f:0b:a9:5a", new float[] {0f, 0f});
-        lookupTable.put("9c:4f:5f:0b:ad:6f", new float[] {0f, 0f});
-        lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {0f, 0f});
+        lookupTable.put("d8:6c:63:d6:5f:aa", new float[] {15.63f, 79.72f});
+        lookupTable.put("60:b7:6e:a3:73:1a", new float[] {19.54f, 76.79f});
+        lookupTable.put("70:3a:cb:29:4b:3a", new float[] {37.12f, 42.98f});
+        lookupTable.put("60:b7:6e:a3:72:07", new float[] {37.12f, 51.78f});
+        lookupTable.put("9c:4f:5f:0b:ac:b4", new float[] {46.89f, 46.89f});
+        lookupTable.put("9c:4f:5f:0b:a9:5a", new float[] {23.45f, 67.41f});
+        lookupTable.put("9c:4f:5f:0b:ad:6f", new float[] {31.65f, 58.62f});
     }
 
     /* Gets */
