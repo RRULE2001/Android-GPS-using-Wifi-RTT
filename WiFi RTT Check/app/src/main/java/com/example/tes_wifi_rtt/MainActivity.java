@@ -32,6 +32,7 @@ public class MainActivity extends Activity {
 
     GPSCoreAPI coreAPI = new GPSCoreAPI();
 
+    int clearCounter = 0;
     public void setCompatible(Context context){
         TextView textCompatible = findViewById(R.id.textCompatible);
 
@@ -266,6 +267,7 @@ public class MainActivity extends Activity {
     Runnable r2=new Runnable() {
         @Override
         public void run() {
+
             Switch switch1 = findViewById(R.id.switch1);
             if (switch1.isChecked()) {
                 Context context = getApplicationContext();
@@ -278,6 +280,12 @@ public class MainActivity extends Activity {
                 TextView position = findViewById(R.id.positionText);
                 position.setText("(" + String.format("%.2f", userPosition[0]) + "," + String.format("%.2f", userPosition[1]) + ")");
                 System.out.println("X:" + userPosition[0] + "Y:" + userPosition[1]);
+            }
+            clearCounter++;
+            if(clearCounter >= 4){
+                coreAPI.clearRouterList();
+                System.out.println("Clear Router List");
+                clearCounter = 0;
             }
             h2.postDelayed(r2,getResources().getInteger(R.integer.scan_delay));
         }

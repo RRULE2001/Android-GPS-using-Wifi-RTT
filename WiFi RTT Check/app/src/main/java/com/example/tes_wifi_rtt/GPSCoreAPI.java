@@ -802,7 +802,9 @@ public class GPSCoreAPI {
         this.device.setRouterList(newRouterList);
     }
 
-
+    public void clearRouterList() {
+        this.device.setRouterList(null);
+    }
 
 
     /**
