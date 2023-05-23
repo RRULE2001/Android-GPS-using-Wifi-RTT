@@ -275,14 +275,16 @@ public class MainActivity extends Activity {
 
                 double[] userPosition = coreAPI.calculatePosition();
 
-                moveMapplease((int)userPosition[0], (int)userPosition[1]);
+                if(userPosition[0] > 0) {
+                    moveMapplease((int) userPosition[0], (int) userPosition[1]);
+                }
 
                 TextView position = findViewById(R.id.positionText);
                 position.setText("(" + String.format("%.2f", userPosition[0]) + "," + String.format("%.2f", userPosition[1]) + ")");
                 System.out.println("X:" + userPosition[0] + "Y:" + userPosition[1]);
             }
             clearCounter++;
-            if(clearCounter >= 4){
+            if(clearCounter >= 10){
                 coreAPI.clearRouterList();
                 System.out.println("Clear Router List");
                 clearCounter = 0;

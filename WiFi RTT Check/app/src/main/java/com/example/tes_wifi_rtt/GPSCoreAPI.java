@@ -770,20 +770,21 @@ public class GPSCoreAPI {
             // CONTINUE FROM HERE
             // Shift the router objects to sort the list by RSSI then by distance
             for (int i = 0; i < newRouterList.length; i++) {
-                for (int j = i; j < newRouterList.length - 1; j++) {
+                if(i < newRouterList.length - 1) {
                     if (newRouterList[i].getRSSI() < newRouterList[i + 1].getRSSI()) {
                         Router temp = newRouterList[i];
                         newRouterList[i] = newRouterList[i + 1];
                         newRouterList[i + 1] = temp;
-                    }
-                    else if(newRouterList[i].getRSSI() == newRouterList[i + 1].getRSSI()) {
-                        if (newRouterList[i].getDist() > newRouterList[i + 1].getDist()) {
-                            Router temp = newRouterList[i];
-                            newRouterList[i] = newRouterList[i + 1];
-                            newRouterList[i + 1] = temp;
-                        }
+                        i = 0;
                     }
                 }
+                /*else if(newRouterList[i].getRSSI() == newRouterList[i + 1].getRSSI()) {
+                    if (newRouterList[i].getDist() > newRouterList[i + 1].getDist()) {
+                        Router temp = newRouterList[i];
+                        newRouterList[i] = newRouterList[i + 1];
+                        newRouterList[i + 1] = temp;
+                    }
+                }*/
             }
         }
         else {
