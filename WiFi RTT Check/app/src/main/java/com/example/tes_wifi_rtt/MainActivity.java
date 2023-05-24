@@ -193,52 +193,145 @@ public class MainActivity extends Activity {
         });
 
         Button buttonZoomIn = findViewById(R.id.buttonZoomIn);
+        class varImport {
+            private float x;
+            private float y;
 
-        buttonZoomIn.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                // Get the map ImageView
-                ImageView map = findViewById(R.id.map);
+            public void zoomIn () {
+                buttonZoomIn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v)
+                    {
 
-                // Get the current scale of the map
-                float currentScale = map.getScaleX();
+                        float xDP = x*13/2.54f; // offset not yet determined
+                        float yDP = y*13/2.54f;
 
-                // Increase the scale by a factor of 1.2
-                float newScale = currentScale * 1.2f;
+                        float xPositionDP =  380/2 - xDP;
+                        float yPositionDP =  760/2 - yDP;
 
-                float maxScale = 4f;
+                        final float scale = getResources().getDisplayMetrics().density;
 
-                if (newScale > maxScale) {
-                    newScale = maxScale;
-                }
+                        int xPositionPx = (int) (xPositionDP * scale + 0.5f);
+                        int yPositionPx = (int) (yPositionDP * scale + 0.5f);
+                        // Get the map ImageView
+                        ImageView map = findViewById(R.id.map);
 
-                // Set the new scale for the map
-                map.setScaleX(newScale);
-                map.setScaleY(newScale);
+                        // Get the current scale of the map
+                        float currentScale = map.getScaleX();
 
+                        // Increase the scale by a factor of 1.2
+                        float newScale = currentScale * 1.2f;
+
+                        float maxScale = 4f;
+
+                        if (newScale > maxScale) {
+                            newScale = maxScale;
+                        }
+
+                        // Calculate the new offset after applying the zoom
+                        float xOffset = xPositionPx * (1 - newScale);
+                        float yOffset = yPositionPx * (1 - newScale);
+
+                        // Apply the new scale and offset to the map
+                        map.setScaleX(newScale);
+                        map.setScaleY(newScale);
+                        map.setTranslationX(xOffset);
+                        map.setTranslationY(yOffset);
+
+                    }
+                });
             }
-        });
 
-        Button buttonZoomOut = findViewById(R.id.buttonZoomOut);
+            Button buttonZoomOut = findViewById(R.id.buttonZoomOut);
+            public void zoomOut() {
+                buttonZoomOut.setOnClickListener(new View.OnClickListener() {
 
-        buttonZoomOut.setOnClickListener(new View.OnClickListener()
+                    @Override
+                    public void onClick(View v) {
+                        float x = 0;
+                        float y = 0;
+
+                        float xDP = x * 13 / 2.54f;
+                        float yDP = y * 13 / 2.54f;
+
+                        float xPositionDP = 380 / 2 - xDP;
+                        float yPositionDP = 760 / 2 - yDP;
+
+                        final float scale = getResources().getDisplayMetrics().density;
+
+                        int xPositionPx = (int) (xPositionDP * scale + 0.5f);
+                        int yPositionPx = (int) (yPositionDP * scale + 0.5f);
+
+                        // Get the map ImageView
+                        ImageView map = findViewById(R.id.map);
+
+                        // Get the current scale of the map
+                        float currentScale = map.getScaleX();
+
+                        // Decrease the scale
+                        float newScale = currentScale / 1.2f;
+
+                        // Minimum scale factor allowed
+                        float minScale = 1f;
+
+                        // hard stops the scale from decreasing
+                        if (newScale < minScale) {
+                            newScale = minScale;
+                        }
+
+                        // Calculate the new offset after applying the zoom
+                        float xOffset = xPositionPx * (1 - newScale);
+                        float yOffset = yPositionPx * (1 - newScale);
+
+                        // Apply the new scale and offset to the map
+                        map.setScaleX(newScale);
+                        map.setScaleY(newScale);
+                        map.setTranslationX(xOffset);
+                        map.setTranslationY(yOffset);
+                    }
+                });
+            }
+
+        }
+
+
+
+
+
+
+
+
+/*        buttonZoomOut.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View v)
             {
+
+                float xDP = x*13/2.54f; // offset not yet determined
+                float yDP = y*13/2.54f;
+
+                float xPositionDP =  380/2 - xDP;
+                float yPositionDP =  760/2 - yDP;
+
+                final float scale = getResources().getDisplayMetrics().density;
+
+                int xPopsitionPx = (int) (xPositionDP * scale + 0.5f);
+                int yPopsitionPx = (int) (yPositionDP * scale + 0.5f);
+
+
                 // Get the map ImageView
                 ImageView map = findViewById(R.id.map);
 
                 // Get the current scale of the map
                 float currentScale = map.getScaleX();
 
-                // Decrease the scale by a factor of 1.2
+                // Decrease the scale
                 float newScale = currentScale / 1.2f;
 
+                // Minimum scale factor allowed
                 float minScale = 1f;
 
+                // hard stops the scale from decreasing
                 if (newScale < minScale) {
                     newScale = minScale;
                 }
@@ -247,21 +340,7 @@ public class MainActivity extends Activity {
                 map.setScaleX(newScale);
                 map.setScaleY(newScale);
             }
-        });
-    }
-
-    public void moveMap(int x, int y) {
-        int offsetX = x; // offset not yet determined
-        int offsetY = y;
-        ImageView map = findViewById(R.id.map);
-        View rootView = findViewById(android.R.id.content).getRootView();
-        int newX = map.getLeft() + offsetX;
-        int newY = map.getTop() + offsetY;
-        int maxX = rootView.getWidth() - map.getWidth();
-        int maxY = rootView.getHeight() - map.getHeight();
-        newX = Math.min(Math.max(0, newX), maxX);
-        newY = Math.min(Math.max(0, newY), maxY);
-        map.layout(newX, newY, newX + map.getWidth(), newY + map.getHeight());
+        }); */
     }
 
     Runnable r2=new Runnable() {
