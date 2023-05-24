@@ -281,7 +281,7 @@ public class MainActivity extends Activity {
 
                 TextView position = findViewById(R.id.positionText);
                 position.setText("(" + String.format("%.2f", userPosition[0]) + "," + String.format("%.2f", userPosition[1]) + ")");
-                System.out.println("X:" + userPosition[0] + "Y:" + userPosition[1]);
+                System.out.println("DATAREADING: " + userPosition[0] + "," + userPosition[1]);
             }
             clearCounter++;
             if(clearCounter >= 10){
