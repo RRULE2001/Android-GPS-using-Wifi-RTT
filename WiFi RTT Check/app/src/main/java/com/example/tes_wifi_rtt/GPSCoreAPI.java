@@ -770,6 +770,7 @@ public class GPSCoreAPI {
             // Shift the router objects to sort the list by RSSI then by distance
             for (int i = 0; i < newRouterList.length; i++) {
                 // Sort by RSSI
+                /*
                 if(i < newRouterList.length - 1) {
                     if (newRouterList[i].getRSSI() < newRouterList[i + 1].getRSSI()) {
                         Router temp = newRouterList[i];
@@ -777,17 +778,17 @@ public class GPSCoreAPI {
                         newRouterList[i + 1] = temp;
                         i = 0;
                     }
-                }
+                }*/
 
                 // Sort by distance
-                /*if(i < newRouterList.length - 1) {
+                if(i < newRouterList.length - 1) {
                     if (newRouterList[i].getDist() > newRouterList[i + 1].getDist()) {
                         Router temp = newRouterList[i];
                         newRouterList[i] = newRouterList[i + 1];
                         newRouterList[i + 1] = temp;
                         i = 0;
                     }
-                }*/
+                }
             }
         }
         else {
@@ -862,9 +863,39 @@ public class GPSCoreAPI {
                 // Y = (CD-AF)/(BD-AE)
                 outY = ((tempC*tempD)-(tempA*tempF))/((tempB*tempD)-(tempA*tempE));
             }
-            output[0] = outX;
-            output[1] = outY;
+            //output[0] = outX;
+            //output[1] = outY;
         }
+
+        double positionX = outX;
+        double positionY = outY;
+        double routerX = testVal[0][1];
+        double routerY = testVal[0][2];
+        double rad = testVal[0][0];
+        if(rad > 10){
+            rad = 10;
+        }
+        double minX = routerX - rad;
+        double maxX = routerX + rad;
+        double minY = routerY - rad;
+        double maxY = routerY + rad;
+
+        if(positionX < minX){
+            positionX = minX;
+        }
+        else if(positionX > maxX){
+            positionX = maxX;
+        }
+
+        if(positionY < minY){
+            positionY = minY;
+        }
+        else if(positionY > maxY){
+            positionY = maxY;
+        }
+
+        output[0] = positionX;
+        output[1] = positionY;
 
         return output;
     }

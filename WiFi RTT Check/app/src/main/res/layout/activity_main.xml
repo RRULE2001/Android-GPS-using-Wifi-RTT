@@ -32,6 +32,38 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
+                    android:id="@+id/test4"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="150dp"
+                    android:layout_marginTop="335dp"
+                    android:src="@drawable/router_icon" />
+
+                <ImageView
+                    android:id="@+id/test3"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="208dp"
+                    android:layout_marginTop="290dp"
+                    android:src="@drawable/router_icon" />
+
+                <ImageView
+                    android:id="@+id/test2"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="160dp"
+                    android:layout_marginTop="255dp"
+                    android:src="@drawable/router_icon" />
+
+                <ImageView
+                    android:id="@+id/test"
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_marginStart="210dp"
+                    android:layout_marginTop="240dp"
+                    android:src="@drawable/router_icon" />
+
+                <ImageView
                     android:id="@+id/map"
                     android:layout_width="match_parent"
                     android:layout_height="630dp"
