@@ -872,26 +872,30 @@ public class GPSCoreAPI {
         double routerX = testVal[0][1];
         double routerY = testVal[0][2];
         double rad = testVal[0][0];
-        if(rad > 10){
-            rad = 10;
-        }
-        double minX = routerX - rad;
-        double maxX = routerX + rad;
-        double minY = routerY - rad;
-        double maxY = routerY + rad;
+        if(outX > 29.31 &&  outX < 48.85 && outY > 37.12 && outY < 65.45) { // Checks that value is within map, if not don't update position
+            if (rad > 10) {
+                rad = 10;
+            }
+            double minX = routerX - rad;
+            double maxX = routerX + rad;
+            double minY = routerY - rad;
+            double maxY = routerY + rad;
 
-        if(positionX < minX){
-            positionX = minX;
-        }
-        else if(positionX > maxX){
-            positionX = maxX;
-        }
+            if (positionX < minX) {
+                positionX = minX;
+            } else if (positionX > maxX) {
+                positionX = maxX;
+            }
 
-        if(positionY < minY){
-            positionY = minY;
+            if (positionY < minY) {
+                positionY = minY;
+            } else if (positionY > maxY) {
+                positionY = maxY;
+            }
         }
-        else if(positionY > maxY){
-            positionY = maxY;
+        else{
+            positionX = 0;
+            positionY = 0;
         }
 
         output[0] = positionX;

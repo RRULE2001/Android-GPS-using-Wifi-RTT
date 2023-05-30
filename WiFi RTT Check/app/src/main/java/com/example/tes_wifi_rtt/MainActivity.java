@@ -33,6 +33,8 @@ public class MainActivity extends Activity {
     GPSCoreAPI coreAPI = new GPSCoreAPI();
 
     int clearCounter = 0;
+
+
     public void setCompatible(Context context){
         TextView textCompatible = findViewById(R.id.textCompatible);
 
@@ -180,7 +182,7 @@ public class MainActivity extends Activity {
 
         setCompatible(context);
 
-        ImageView map = findViewById(R.id.map);
+        FrameLayout map = findViewById(R.id.mapContainer);
 
         ImageButton button = findViewById(R.id.buttonMap);
         button.setOnClickListener(new View.OnClickListener()
@@ -275,12 +277,13 @@ public class MainActivity extends Activity {
 
                 double[] userPosition = coreAPI.calculatePosition();
 
-                if(userPosition[0] > 29.31 &&  userPosition[0] < 48.85 && userPosition[1] > 37.12 && userPosition[1] < 65.45) { // Checks that value is within map, if not don't update position
+                if(userPosition[0] > 0 && userPosition[1] > 0) {
                     moveMapplease((int) userPosition[0], (int) userPosition[1]);
                     TextView position = findViewById(R.id.positionText);
                     position.setText("(" + String.format("%.2f", userPosition[0]) + "," + String.format("%.2f", userPosition[1]) + ")");
                     System.out.println("DATAREADING: " + userPosition[0] + "," + userPosition[1]);
                 }
+
             }
             clearCounter++;
             if(clearCounter >= 10){
