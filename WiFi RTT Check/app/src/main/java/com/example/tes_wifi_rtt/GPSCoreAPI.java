@@ -770,7 +770,7 @@ public class GPSCoreAPI {
             // Shift the router objects to sort the list by RSSI then by distance
             for (int i = 0; i < newRouterList.length; i++) {
                 // Sort by RSSI
-                /*
+
                 if(i < newRouterList.length - 1) {
                     if (newRouterList[i].getRSSI() < newRouterList[i + 1].getRSSI()) {
                         Router temp = newRouterList[i];
@@ -778,17 +778,17 @@ public class GPSCoreAPI {
                         newRouterList[i + 1] = temp;
                         i = 0;
                     }
-                }*/
+                }
 
                 // Sort by distance
-                if(i < newRouterList.length - 1) {
+                /*if(i < newRouterList.length - 1) {
                     if (newRouterList[i].getDist() > newRouterList[i + 1].getDist()) {
                         Router temp = newRouterList[i];
                         newRouterList[i] = newRouterList[i + 1];
                         newRouterList[i + 1] = temp;
                         i = 0;
                     }
-                }
+                }*/
             }
         }
         else {
@@ -843,64 +843,63 @@ public class GPSCoreAPI {
             }
             // Evaluation for temporary variables using the first and second equations
             // A = -2*x1 + 2*x2
-            tempA = (-2*testVal[0][1])+(2*testVal[1][1]);
+            tempA = (-2 * testVal[0][1]) + (2 * testVal[1][1]);
             // B = -2*y1 + 2*y2
-            tempB = (-2*testVal[0][2])+(2*testVal[1][2]);
+            tempB = (-2 * testVal[0][2]) + (2 * testVal[1][2]);
             // C = (r1)^2 - (r2)^2 - (x1)^2 + (x2)^2 - (y1)^2 + (y2)^2
-            tempC = (testVal[0][0]*testVal[0][0])-(testVal[1][0]*testVal[1][0])-(testVal[0][1]*testVal[0][1])+(testVal[1][1]*testVal[1][1])-(testVal[0][2]*testVal[0][2])+(testVal[1][2]*testVal[1][2]);
+            tempC = (testVal[0][0] * testVal[0][0]) - (testVal[1][0] * testVal[1][0]) - (testVal[0][1] * testVal[0][1]) + (testVal[1][1] * testVal[1][1]) - (testVal[0][2] * testVal[0][2]) + (testVal[1][2] * testVal[1][2]);
             // Evaluation for temporary variables using the second and third equations
             // D = -2*x2 + 2*x3
-            tempD = (-2*testVal[1][1])+(2*testVal[2][1]);
+            tempD = (-2 * testVal[1][1]) + (2 * testVal[2][1]);
             // E = -2*y2 + 2*y3
-            tempE = (-2*testVal[1][2])+(2*testVal[2][2]);
+            tempE = (-2 * testVal[1][2]) + (2 * testVal[2][2]);
             // F = (r2)^2 - (r3)^2 - (x2)^2 + (x3)^2 - (y2)^2 + (y3)^2
-            tempF = (testVal[1][0]*testVal[1][0])-(testVal[2][0]*testVal[2][0])-(testVal[1][1]*testVal[1][1])+(testVal[2][1]*testVal[2][1])-(testVal[1][2]*testVal[1][2])+(testVal[2][2]*testVal[2][2]);
+            tempF = (testVal[1][0] * testVal[1][0]) - (testVal[2][0] * testVal[2][0]) - (testVal[1][1] * testVal[1][1]) + (testVal[2][1] * testVal[2][1]) - (testVal[1][2] * testVal[1][2]) + (testVal[2][2] * testVal[2][2]);
             // If denominator does not equal 0, output can be calculated
-            if (!((tempA == 0 || tempE == 0) && (tempB == 0 || tempD == 0)) && ((tempA*tempE) != (tempB*tempD))) {
+            if (!((tempA == 0 || tempE == 0) && (tempB == 0 || tempD == 0)) && ((tempA * tempE) != (tempB * tempD))) {
                 // Evaluation temporary variables to find 2-D coordinates
                 // X = (CE-FB)/(EA-BD)
-                outX = ((tempC*tempE)-(tempF*tempB))/((tempE*tempA)-(tempB*tempD));
+                outX = ((tempC * tempE) - (tempF * tempB)) / ((tempE * tempA) - (tempB * tempD));
                 // Y = (CD-AF)/(BD-AE)
-                outY = ((tempC*tempD)-(tempA*tempF))/((tempB*tempD)-(tempA*tempE));
+                outY = ((tempC * tempD) - (tempA * tempF)) / ((tempB * tempD) - (tempA * tempE));
             }
-            //output[0] = outX;
-            //output[1] = outY;
+            output[0] = outX;
+            output[1] = outY;
+
+
+            double positionX = outX;
+            double positionY = outY;
+            double routerX = testVal[0][1];
+            double routerY = testVal[0][2];
+            double rad = testVal[0][0];
+            if (outX > 29.31 && outX < 48.85 && outY > 37.12 && outY < 65.45) { // Checks that value is within map, if not don't update position
+                if (rad > 10) {
+                    rad = 10;
+                }
+                double minX = routerX - rad;
+                double maxX = routerX + rad;
+                double minY = routerY - rad;
+                double maxY = routerY + rad;
+
+                if (positionX < minX) {
+                    positionX = minX;
+                } else if (positionX > maxX) {
+                    positionX = maxX;
+                }
+
+                if (positionY < minY) {
+                    positionY = minY;
+                } else if (positionY > maxY) {
+                    positionY = maxY;
+                }
+            } else {
+                positionX = 0;
+                positionY = 0;
+            }
+
+            output[0] = positionX;
+            output[1] = positionY;
         }
-
-        double positionX = outX;
-        double positionY = outY;
-        double routerX = testVal[0][1];
-        double routerY = testVal[0][2];
-        double rad = testVal[0][0];
-        if(outX > 29.31 &&  outX < 48.85 && outY > 37.12 && outY < 65.45) { // Checks that value is within map, if not don't update position
-            if (rad > 10) {
-                rad = 10;
-            }
-            double minX = routerX - rad;
-            double maxX = routerX + rad;
-            double minY = routerY - rad;
-            double maxY = routerY + rad;
-
-            if (positionX < minX) {
-                positionX = minX;
-            } else if (positionX > maxX) {
-                positionX = maxX;
-            }
-
-            if (positionY < minY) {
-                positionY = minY;
-            } else if (positionY > maxY) {
-                positionY = maxY;
-            }
-        }
-        else{
-            positionX = 0;
-            positionY = 0;
-        }
-
-        output[0] = positionX;
-        output[1] = positionY;
-
         return output;
     }
 }

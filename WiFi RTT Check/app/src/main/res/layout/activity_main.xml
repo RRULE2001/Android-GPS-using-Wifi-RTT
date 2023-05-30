@@ -32,16 +32,10 @@
                 app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
-                    android:id="@+id/map"
-                    android:layout_width="match_parent"
-                    android:layout_height="630dp"
-                    android:src="@drawable/map" />
-
-                <ImageView
                     android:id="@+id/smallRoom"
                     android:layout_width="10dp"
                     android:layout_height="10dp"
-                    android:layout_marginStart="208dp"
+                    android:layout_marginStart="194dp"
                     android:layout_marginTop="290dp"
                     android:background="#FFEB3B"
                     android:src="@drawable/router_icon" />
@@ -61,6 +55,12 @@
                     android:layout_marginStart="210dp"
                     android:layout_marginTop="240dp"
                     android:src="@drawable/router_icon" />
+
+                <ImageView
+                    android:id="@+id/map"
+                    android:layout_width="match_parent"
+                    android:layout_height="630dp"
+                    android:src="@drawable/map" />
 
                 <ImageView
                     android:id="@+id/MACb4"
