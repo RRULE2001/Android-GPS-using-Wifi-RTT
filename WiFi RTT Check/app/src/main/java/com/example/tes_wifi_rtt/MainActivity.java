@@ -32,13 +32,14 @@ public class MainActivity extends Activity {
 
     GPSCoreAPI coreAPI = new GPSCoreAPI();
 
-    int xGlobal = 0;
-    int yGlobal = 0;
+    double xGlobal = 0;
+    double yGlobal = 0;
 
-    float dpPerMeter = 13/2.54f;
-
+    float dpPerMeter = 5.118f; // 13/2.54
+    float constdpPerMeter = 5.118f;
     int clearCounter = 0;
 
+    int zoomLevel = 1;
 
     public void setCompatible(Context context){
         TextView textCompatible = findViewById(R.id.textCompatible);
@@ -206,42 +207,28 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v)
             {
+
                 // Get the current scale of the map
                 float currentScale = map.getScaleX();
 
-                // Increase the scale by a factor of 1.2
-                float newScale = currentScale * 1.2f;
-
-                dpPerMeter = dpPerMeter / 1.2f;
-
-                float xDP = xGlobal*(dpPerMeter);
-                float yDP = yGlobal*(dpPerMeter);
-
-                float xPositionDP =  (380/2 - xDP);
-                float yPositionDP =  (760/2 - yDP);
-
-
-                final float scale = getResources().getDisplayMetrics().density;
-
-                float xPositionPx = (int) (xPositionDP * scale + 0.5f);
-                float yPositionPx = (int) (yPositionDP * scale + 0.5f);
+                // Decrease the scale by a factor of 1.2
+                float newScale = currentScale + 1f;
 
                 float maxScale = 4f;
 
-                if (newScale > maxScale) {
-                    newScale = maxScale;
+                if (newScale <= maxScale) {
+
+                    if(zoomLevel < 4){
+                        zoomLevel++;
+                    }
+                    dpPerMeter = constdpPerMeter * (zoomLevel);
+
+                    // Set translation for zoom
+                    map.setScaleX(newScale);
+                    map.setScaleY(newScale);
+
+                    moveMapplease((int)xGlobal, (int)yGlobal);
                 }
-                float xOffset = xPositionPx * (1 - newScale);
-                float yOffset = yPositionPx * (1 - newScale);
-
-                // Set the new scale for the map
-                // Set translation for zoom
-                map.setScaleX(newScale);
-                map.setScaleY(newScale);
-                //map.setTranslationX(xOffset);
-                //map.setTranslationY(yOffset);
-
-
             }
         });
 
@@ -256,37 +243,24 @@ public class MainActivity extends Activity {
                 float currentScale = map.getScaleX();
 
                 // Decrease the scale by a factor of 1.2
-                float newScale = currentScale / 1.2f;
-
-                dpPerMeter = dpPerMeter * 1.2f;
-
-                float xDP = xGlobal*(dpPerMeter);
-                float yDP = yGlobal*(dpPerMeter);
-
-
-                float xPositionDP =  (380/2 - xDP) ;
-                float yPositionDP =  (760/2 - yDP) ;
-
-
-                final float scale = getResources().getDisplayMetrics().density;
-
-                float xPositionPx = (int) (xPositionDP * scale + 0.5f) / newScale;
-                float yPositionPx = (int) (yPositionDP * scale + 0.5f) / newScale;
+                float newScale = currentScale - 1f;
 
                 float minScale = 1f;
 
-                if (newScale < minScale) {
-                    newScale = minScale;
+                if (newScale >= minScale) {
+                    if(zoomLevel > 1){
+                        zoomLevel--;
+                    }
+                    dpPerMeter = constdpPerMeter * (zoomLevel);
+
+                    // Set the new scale for the map
+                    map.setScaleX(newScale);
+                    map.setScaleY(newScale);
+
+                    moveMapplease((int)xGlobal, (int)yGlobal);
+
                 }
 
-                float xOffset = xPositionPx * (1 - newScale);
-                float yOffset = yPositionPx * (1 - newScale);
-
-                // Set the new scale for the map
-                map.setScaleX(newScale);
-                map.setScaleY(newScale);
-                //map.setTranslationX(xOffset);
-                //map.setTranslationY(yOffset);
             }
         });
     }
@@ -317,6 +291,8 @@ public class MainActivity extends Activity {
                 double[] userPosition = coreAPI.calculatePosition();
 
                 if(userPosition[0] > 0 && userPosition[1] > 0) {
+                    xGlobal = userPosition[0];
+                    yGlobal = userPosition[1];
                     moveMapplease((int) userPosition[0], (int) userPosition[1]);
                     TextView position = findViewById(R.id.positionText);
                     position.setText("(" + String.format("%.2f", userPosition[0]) + "," + String.format("%.2f", userPosition[1]) + ")");
@@ -353,8 +329,8 @@ public class MainActivity extends Activity {
         //float xPositionDP =  410/2 - xDP;
         //float yPositionDP =  630/2 - yDP;
 
-        float xPositionDP =  380/2 - xDP;
-        float yPositionDP =  760/2 - yDP;
+        float xPositionDP =  (380/2) * zoomLevel - xDP;
+        float yPositionDP =  (760/2) * zoomLevel - yDP;
 
         //float xPositionDP = xDP;
         //float yPositionDP = yDP;

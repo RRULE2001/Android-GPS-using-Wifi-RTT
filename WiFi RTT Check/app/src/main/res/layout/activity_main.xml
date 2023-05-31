@@ -60,6 +60,8 @@
                     android:id="@+id/map"
                     android:layout_width="match_parent"
                     android:layout_height="630dp"
+                    android:scaleX="1"
+                    android:scaleY="1"
                     android:src="@drawable/map" />
 
                 <ImageView
