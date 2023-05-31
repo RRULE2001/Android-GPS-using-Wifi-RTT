@@ -35,6 +35,8 @@ public class MainActivity extends Activity {
     int xGlobal = 0;
     int yGlobal = 0;
 
+    float dpPerMeter = 13/2.54f;
+
     int clearCounter = 0;
 
 
@@ -204,32 +206,25 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v)
             {
-                float xDP = xGlobal*13/2.54f;
-                float yDP = yGlobal*13/2.54f;
+                // Get the current scale of the map
+                float currentScale = map.getScaleX();
 
+                // Increase the scale by a factor of 1.2
+                float newScale = currentScale * 1.2f;
 
-                float xPositionDP =  380/2 - xDP;
-                float yPositionDP =  760/2 - yDP;
+                dpPerMeter = dpPerMeter / 1.2f;
+
+                float xDP = xGlobal*(dpPerMeter);
+                float yDP = yGlobal*(dpPerMeter);
+
+                float xPositionDP =  (380/2 - xDP);
+                float yPositionDP =  (760/2 - yDP);
 
 
                 final float scale = getResources().getDisplayMetrics().density;
 
                 float xPositionPx = (int) (xPositionDP * scale + 0.5f);
                 float yPositionPx = (int) (yPositionDP * scale + 0.5f);
-
-                FrameLayout mapContainer = findViewById(R.id.mapContainer);
-
-                mapContainer.setX((int)xPositionPx);
-                mapContainer.setY((int)yPositionPx);
-
-                // Get the map ImageView
-                ImageView map = findViewById(R.id.map);
-
-                // Get the current scale of the map
-                float currentScale = map.getScaleX();
-
-                // Increase the scale by a factor of 1.2
-                float newScale = currentScale * 1.2f;
 
                 float maxScale = 4f;
 
@@ -243,8 +238,8 @@ public class MainActivity extends Activity {
                 // Set translation for zoom
                 map.setScaleX(newScale);
                 map.setScaleY(newScale);
-                map.setTranslationX(xOffset);
-                map.setTranslationY(yOffset);
+                //map.setTranslationX(xOffset);
+                //map.setTranslationY(yOffset);
 
 
             }
@@ -257,32 +252,26 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v)
             {
-                float xDP = xGlobal*13/2.54f;
-                float yDP = yGlobal*13/2.54f;
-
-
-                float xPositionDP =  380/2 - xDP;
-                float yPositionDP =  760/2 - yDP;
-
-
-                final float scale = getResources().getDisplayMetrics().density;
-
-                float xPositionPx = (int) (xPositionDP * scale + 0.5f);
-                float yPositionPx = (int) (yPositionDP * scale + 0.5f);
-
-                FrameLayout mapContainer = findViewById(R.id.mapContainer);
-
-                mapContainer.setX((int)xPositionPx);
-                mapContainer.setY((int)yPositionPx);
-
-                // Get the map ImageView
-                ImageView map = findViewById(R.id.map);
-
                 // Get the current scale of the map
                 float currentScale = map.getScaleX();
 
                 // Decrease the scale by a factor of 1.2
                 float newScale = currentScale / 1.2f;
+
+                dpPerMeter = dpPerMeter * 1.2f;
+
+                float xDP = xGlobal*(dpPerMeter);
+                float yDP = yGlobal*(dpPerMeter);
+
+
+                float xPositionDP =  (380/2 - xDP) ;
+                float yPositionDP =  (760/2 - yDP) ;
+
+
+                final float scale = getResources().getDisplayMetrics().density;
+
+                float xPositionPx = (int) (xPositionDP * scale + 0.5f) / newScale;
+                float yPositionPx = (int) (yPositionDP * scale + 0.5f) / newScale;
 
                 float minScale = 1f;
 
@@ -296,8 +285,8 @@ public class MainActivity extends Activity {
                 // Set the new scale for the map
                 map.setScaleX(newScale);
                 map.setScaleY(newScale);
-                map.setTranslationX(xOffset);
-                map.setTranslationY(yOffset);
+                //map.setTranslationX(xOffset);
+                //map.setTranslationY(yOffset);
             }
         });
     }
@@ -358,8 +347,8 @@ public class MainActivity extends Activity {
     }
 
     public void moveMapplease(float x, float y) {
-        float xDP = x*13/2.54f; // offset not yet determined
-        float yDP = y*13/2.54f;
+        float xDP = x*dpPerMeter; // offset not yet determined
+        float yDP = y*dpPerMeter;
 
         //float xPositionDP =  410/2 - xDP;
         //float yPositionDP =  630/2 - yDP;
