@@ -32,6 +32,9 @@ public class MainActivity extends Activity {
 
     GPSCoreAPI coreAPI = new GPSCoreAPI();
 
+    int xGlobal = 0;
+    int yGlobal = 0;
+
     int clearCounter = 0;
 
 
@@ -201,6 +204,24 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v)
             {
+                float xDP = xGlobal*13/2.54f;
+                float yDP = yGlobal*13/2.54f;
+
+
+                float xPositionDP =  380/2 - xDP;
+                float yPositionDP =  760/2 - yDP;
+
+
+                final float scale = getResources().getDisplayMetrics().density;
+
+                float xPositionPx = (int) (xPositionDP * scale + 0.5f);
+                float yPositionPx = (int) (yPositionDP * scale + 0.5f);
+
+                FrameLayout mapContainer = findViewById(R.id.mapContainer);
+
+                mapContainer.setX((int)xPositionPx);
+                mapContainer.setY((int)yPositionPx);
+
                 // Get the map ImageView
                 ImageView map = findViewById(R.id.map);
 
@@ -215,10 +236,16 @@ public class MainActivity extends Activity {
                 if (newScale > maxScale) {
                     newScale = maxScale;
                 }
+                float xOffset = xPositionPx * (1 - newScale);
+                float yOffset = yPositionPx * (1 - newScale);
 
                 // Set the new scale for the map
+                // Set translation for zoom
                 map.setScaleX(newScale);
                 map.setScaleY(newScale);
+                map.setTranslationX(xOffset);
+                map.setTranslationY(yOffset);
+
 
             }
         });
@@ -230,6 +257,24 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View v)
             {
+                float xDP = xGlobal*13/2.54f;
+                float yDP = yGlobal*13/2.54f;
+
+
+                float xPositionDP =  380/2 - xDP;
+                float yPositionDP =  760/2 - yDP;
+
+
+                final float scale = getResources().getDisplayMetrics().density;
+
+                float xPositionPx = (int) (xPositionDP * scale + 0.5f);
+                float yPositionPx = (int) (yPositionDP * scale + 0.5f);
+
+                FrameLayout mapContainer = findViewById(R.id.mapContainer);
+
+                mapContainer.setX((int)xPositionPx);
+                mapContainer.setY((int)yPositionPx);
+
                 // Get the map ImageView
                 ImageView map = findViewById(R.id.map);
 
@@ -245,9 +290,14 @@ public class MainActivity extends Activity {
                     newScale = minScale;
                 }
 
+                float xOffset = xPositionPx * (1 - newScale);
+                float yOffset = yPositionPx * (1 - newScale);
+
                 // Set the new scale for the map
                 map.setScaleX(newScale);
                 map.setScaleY(newScale);
+                map.setTranslationX(xOffset);
+                map.setTranslationY(yOffset);
             }
         });
     }
