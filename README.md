@@ -11,7 +11,7 @@ VM: OpenJDK 64-Bit Server VM by JetBrains s.r.o.<br>
 An android phone with android version +9.0 (for spupport with android wifi-rtt API)<br>
 More than 3 Wifi routers that support wifi-rtt (802.11.mc)<br>
 
-##How to Run
+## How to Run
 Open the folder called ../Android GPS using Wifi-RTT in android studio<br>
 Under the Built tab select Build All<br>
 Connect phone to computer(enable phone dubugger)<br>
